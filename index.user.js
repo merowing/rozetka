@@ -43,6 +43,8 @@
         item.querySelector('span').setAttribute('class', classStr);
 
         let categoryId = getParentId(item).getAttribute('id');
+
+        return;
         categoryId = categoryId.split('_');
         if(categoryId[1] === 'seller') {
             switch(categoryId[2]) {
@@ -115,10 +117,10 @@
     modified();
     
     function getParentId(item) {
-        if(item.parentNode.tagName != "LI") {
-            return getParentId(item.parentNode);
+        if(item.tagName === "LABEL") {
+            return item.querySelector('a');
         }
-        return item.parentNode;
+        return item;
     }
 
     new MutationObserver(function(mutations, observer) {
