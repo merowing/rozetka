@@ -8,6 +8,7 @@
     let lenItemsLinks = itemsLinksA.length;
 
     let url = window.location.href;
+    let vanilaUrl = url;
     // we must set parameter modified for the reason that sometimes data change thanks to html.history
     div.querySelector('#parameters-filter-form').setAttribute("modified", "");
     
@@ -56,13 +57,32 @@
         
         let reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
         let values = reg.exec(categoryLink)[1];
-
+        
+        reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+        let valuesVanilaUrl = reg.exec(vanilaUrl)[1];
+        let valuesVanilaUrlArr = "";
+        
+        let valuesArr = "";
+        let valuesUrlArr = "";
+        
         if(url.indexOf(categoryId[0]) !== -1) {
             reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
             let valuesUrl = reg.exec(url)[1];
 
-            let valuesArr = values.split(',');
-            let valuesUrlArr = valuesUrl.split(',');
+            valuesArr = values.split(',');
+            valuesUrlArr = valuesUrl.split(',');
+
+            valuesVanilaUrlArr = valuesVanilaUrl.split(',');
+            if(valuesArr.length < valuesVanilaUrlArr.length && valuesVanilaUrlArr.length > 0) {
+                if(active) {
+                    let indCategoryStart = url.indexOf(categoryId[0]);
+                    let indCategoryFinish = url.indexOf(";",categoryId[0].length);
+                    let replaceStr = categoryId[0] + "=" + values;
+                    url = url.substr(0, indCategoryStart) + replaceStr + url.substr(indCategoryFinish);
+                }else {
+
+                }
+            }
 
             if(active) {
                 categoryId[1] = valuesArr[0];
@@ -100,7 +120,7 @@
         console.log(categoryId);
         
         // -- end get category block
-
+        if(valuesArr.length > valuesVanilaUrlArr.length && valuesVanilaUrlArr.length > 0) {
         // url.match(/\/[a-z=0-9;,\-]+\//gi)[1].replace(/\//g,'');
         let str = url.match(/\/[a-z=0-9;,\-]+\//gi);
         let data = [];
@@ -152,6 +172,7 @@
         }else {
             url += categoryId.join("=") + "/"
         }
+    }
         console.log(url);
 
     }
