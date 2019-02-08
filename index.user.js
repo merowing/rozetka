@@ -63,44 +63,59 @@
         
         if(url.indexOf(categoryId[0]) !== -1) {
             reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+            console.log("url: " + categoryId[0] + " - " + url);
             let valuesUrl = reg.exec(url)[1];
 
             valuesArr = values.split(',');
             valuesUrlArr = valuesUrl.split(',');
 
-            reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
-            let valuesVanilaUrl = reg.exec(vanilaUrl)[1];
-            let valuesVanilaUrlArr = valuesVanilaUrl.split(',');
-            
-            if(valuesArr.length < valuesVanilaUrlArr.length && valuesVanilaUrlArr.length > 0) {
-                //if(active) {
-                    /*let indCategoryStart = url.indexOf(categoryId[0]);
-                    let indCategoryFinish = url.indexOf(";",categoryId[0].length);
-                    let replaceStr = categoryId[0] + "=" + values;
-                    url = url.substr(0, indCategoryStart) + replaceStr + url.substr(indCategoryFinish);*/
+            //console.log("category:" + categoryId[0] + " - " + vanilaUrl.indexOf(categoryId[0]));
+            if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
+                reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+                let valuesVanilaUrl = reg.exec(vanilaUrl)[1];
+                let valuesVanilaUrlArr = valuesVanilaUrl.split(',');
 
-                    for(let n = 0; n < valuesVanilaUrlArr.length; n++) {
-                        for(let n1 = 0; n1 < valuesArr.length; n1++) {
-                            if(valuesVanilaUrlArr[n] == valuesArr[n1]) {
+                if(valuesArr.length < valuesVanilaUrlArr.length) {
+                    //if(active) {
+                        /*let indCategoryStart = url.indexOf(categoryId[0]);
+                        let indCategoryFinish = url.indexOf(";",categoryId[0].length);
+                        let replaceStr = categoryId[0] + "=" + values;
+                        url = url.substr(0, indCategoryStart) + replaceStr + url.substr(indCategoryFinish);*/
+
+                        for(let n = 0; n < valuesVanilaUrlArr.length; n++) {
+                            for(let n1 = 0; n1 < valuesArr.length; n1++) {
+                                if(valuesVanilaUrlArr[n] == valuesArr[n1]) {
+                                    categoryId[1] = "";
+                                    break;
+                                }
+
+                                categoryId[1] = valuesVanilaUrlArr[n];
+                            }
+                            if(categoryId[1]) break;
+                        }
+                        console.log("vanila: " + categoryId[1]);
+
+                    //}else {
+
+                    //}
+                }else {
+                    for(let q = 0; q < valuesArr.length; q++) {
+                        for(let q1 = 0; q1 < valuesVanilaUrlArr.length; q1++) {
+                            if(valuesArr[q] == valuesVanilaUrlArr[q1]) {
                                 categoryId[1] = "";
                                 break;
                             }
-
-                            categoryId[1] = valuesVanilaUrlArr[n];
+                            categoryId[1] = valuesArr[q];
                         }
                         if(categoryId[1]) break;
                     }
-                    console.log("vanila: " + categoryId[1]);
+                }
+            }else {
 
-                //}else {
-
-                //}
-            }
-
-            if(valuesArr.length > valuesVanilaUrlArr.length) {
-                //if(active) {
-                //    categoryId[1] = valuesArr[0];
-                //}else {
+            //if(valuesArr.length > valuesVanilaUrlArr.length) {
+                if(active) {
+                    categoryId[1] = valuesArr[0];
+                }else {
                     //let found = false;
                     for(let q = 0; q < valuesArr.length; q++) {
                         //found = false;
@@ -117,7 +132,7 @@
                         }
                         if(categoryId[1]) break;
                     }
-                //}
+                }
             }
         }else {
             categoryId[1] = values;
