@@ -80,61 +80,23 @@
             //console.log("category:" + categoryId[0] + " - " + vanilaUrl.indexOf(categoryId[0]));
             if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
                 
+                categoryId[1] = valuesArr.filter(x => !valuesVanilaUrlArr.includes(x)
+                    ).concat(
+                        valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
+                    ).join("");
+                
+            }else {
 
-                if(valuesArr.length < valuesVanilaUrlArr.length) {
-                    //if(active) {
-                        /*let indCategoryStart = url.indexOf(categoryId[0]);
-                        let indCategoryFinish = url.indexOf(";",categoryId[0].length);
-                        let replaceStr = categoryId[0] + "=" + values;
-                        url = url.substr(0, indCategoryStart) + replaceStr + url.substr(indCategoryFinish);*/
-
-                        for(let n = 0; n < valuesVanilaUrlArr.length; n++) {
-                            for(let n1 = 0; n1 < valuesArr.length; n1++) {
-                                if(valuesVanilaUrlArr[n] == valuesArr[n1]) {
-                                    categoryId[1] = "";
-                                    break;
-                                }
-
-                                categoryId[1] = valuesVanilaUrlArr[n];
-                            }
-                            if(categoryId[1]) break;
-                        }
-                        console.log("vanila: " + categoryId[1]);
-
-                    //}else {
-
-                    //}
+                if(active) {
+                    categoryId[1] = valuesArr[0];
                 }else {
                     for(let q = 0; q < valuesArr.length; q++) {
-                        for(let q1 = 0; q1 < valuesVanilaUrlArr.length; q1++) {
-                            if(valuesArr[q] == valuesVanilaUrlArr[q1]) {
+                        for(let q1 = 0; q1 < valuesUrlArr.length; q1++) {
+                            if(valuesArr[q] == valuesUrlArr[q1]) {
                                 categoryId[1] = "";
                                 break;
                             }
                             categoryId[1] = valuesArr[q];
-                        }
-                        if(categoryId[1]) break;
-                    }
-                }
-            }else {
-
-            //if(valuesArr.length > valuesVanilaUrlArr.length) {
-                if(active) {
-                    categoryId[1] = valuesArr[0];
-                }else {
-                    //let found = false;
-                    for(let q = 0; q < valuesArr.length; q++) {
-                        //found = false;
-                        for(let q1 = 0; q1 < valuesUrlArr.length; q1++) {
-                            if(valuesArr[q] == valuesUrlArr[q1]) {
-                                //found = true;
-                                categoryId[1] = "";
-                                break;
-                            }
-
-                            //if(!found && q1 == valuesUrlArr.length - 1) {
-                                categoryId[1] = valuesArr[q];
-                            //}
                         }
                         if(categoryId[1]) break;
                     }
