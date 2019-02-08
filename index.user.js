@@ -58,22 +58,28 @@
         let reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
         let values = reg.exec(categoryLink)[1];
         
-        let valuesArr = "";
+        let valuesArr = values.split(',');
         let valuesUrlArr = "";
         
+        let valuesVanilaUrl = "";
+        let valuesVanilaUrlArr = "";
+        if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
+            regVanila = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+            valuesVanilaUrl = regVanila.exec(vanilaUrl)[1];
+            valuesVanilaUrlArr = valuesVanilaUrl.split(',');
+        }
+
         if(url.indexOf(categoryId[0]) !== -1) {
             reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
             console.log("url: " + categoryId[0] + " - " + url);
             let valuesUrl = reg.exec(url)[1];
 
-            valuesArr = values.split(',');
+            
             valuesUrlArr = valuesUrl.split(',');
 
             //console.log("category:" + categoryId[0] + " - " + vanilaUrl.indexOf(categoryId[0]));
             if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
-                reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
-                let valuesVanilaUrl = reg.exec(vanilaUrl)[1];
-                let valuesVanilaUrlArr = valuesVanilaUrl.split(',');
+                
 
                 if(valuesArr.length < valuesVanilaUrlArr.length) {
                     //if(active) {
@@ -135,7 +141,26 @@
                 }
             }
         }else {
-            categoryId[1] = values;
+            if(valuesArr.length == 1) {
+                categoryId[1] = values;
+            }else {
+                if(valuesArr.length < valuesVanilaUrlArr.length) {
+                    let temp  = valuesArr;
+                    valuesArr = valuesVanilaUrlArr;
+                    valuesVanilaUrlArr = temp;
+                }
+
+                for(let q = 0; q < valuesArr.length; q++) {
+                    for(let q1 = 0; q1 < valuesVanilaUrlArr.length; q1++) {
+                        if(valuesArr[q] == valuesVanilaUrlArr[q1]) {
+                            categoryId[1] = "";
+                            break;
+                        }
+                        categoryId[1] = valuesArr[q];
+                    }
+                    if(categoryId[1]) break;
+                }
+            }
         }
         console.log("category:" + categoryId[1]);
 
@@ -196,10 +221,11 @@
             
             let t = 0;
             url = url.replace(/\/[a-z=0-9;,\-]+\//ig, function(match) {
-                if(t == 1) return "/" + str.join(';') + "/";
+                if(t == 1) return "/" + str.join(';');// + "/";
                 t++;
                 return match;
             });
+            if(str.length > 0) url += "/";
 
         }else {
             url += categoryId.join("=") + "/"
