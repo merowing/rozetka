@@ -2,9 +2,10 @@
     
     let url = "";
     let vanilaUrl = "";
+    let checkedItems = [];
+    let div = document.querySelector('#catalog_filters_block');
 
     function modified() {
-    let div = document.querySelector('#catalog_filters_block');
     let items = div.querySelectorAll('li');
     let itemsLinksA = div.querySelectorAll('li a');
     let itemsLinksLabel = div.querySelectorAll('li label');
@@ -24,24 +25,28 @@
         itemsLinksA[i].addEventListener("click", function(e) {
             e.preventDefault();
 
-            setInput(this);
+            setInput(this, i);
 
-            setButtonPosition(this);
+            setButtonPosition(i);
 
             e.stopPropagation();
         });
         itemsLinksLabel[i].addEventListener("click", function(e) {
             e.preventDefault();
-            setInput(this);
-            setButtonPosition(this);
+            setInput(this, i);
+            setButtonPosition(i);
             e.stopImmediatePropagation();
         });
 
         items[i].setAttribute("style","margin:3px 6px 5px 5px;padding:0;");
         //items[i].querySelector('label').setAttribute("style","margin:0;padding-right:0;");
+
+        if(items[i].querySelector('span').getAttribute('class').indexOf('active') >= 0) {
+            checkedItems.push(i);
+        }
     }
 
-    function setInput(itm) {
+    function setInput(itm, itemIndex) {
         let item = itm;
         let classStr = item.querySelector('span').getAttribute('class');
         let classStrArr = [];
@@ -49,12 +54,19 @@
         if(classStr.indexOf('active') === -1) {
             classStrArr = classStr.split(' ');
             classStr = classStrArr[0] + ' ' + classStrArr[1] + '-active ' + classStrArr[2];
+            
+            checkedItems.push(itemIndex);
         }else {
             classStr = classStr.replace('-active','');
             active = true; // if active, remove item from url
+            
+            let indChecked = checkedItems.indexOf(itemIndex);
+            if(indChecked !== -1) {
+                checkedItems.splice(indChecked, 1);
+            }
         }
         item.querySelector('span').setAttribute('class', classStr);
-
+        console.log(checkedItems);
         //let categoryId = getParentId(item).getAttribute('id');
         
         // -- get category block
@@ -237,7 +249,11 @@
         window.location.href = url;
     });
 
-    function setButtonPosition(elem) {
+    function setButtonPosition(elemIndex) {
+        let elem = div.querySelectorAll('li')[elemIndex];
+        if(checkedItems.indexOf(elemIndex) === -1 && checkedItems.length >= 1) {
+            elem = div.querySelectorAll('li')[checkedItems[checkedItems.length - 1]];
+        }
         let l = 0;
         if(elem.querySelectorAll('i').length > 1) {
             l = 1;
@@ -255,9 +271,11 @@
         button.style.top = (top - (button.offsetHeight - height)/2) + scrollTop + "px";
 
         button.style.visibility = "visible";
-        if(url === vanilaUrl) {
-            button.style.display = "hidden";
+        if(!checkedItems.length) {
+            button.style.visibility = "hidden";
         }
+
+
     }
 
 })();
