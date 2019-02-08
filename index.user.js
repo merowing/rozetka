@@ -1,4 +1,7 @@
 (function(){
+    
+    let url = "";
+    
     function modified() {
     let div = document.querySelector('#catalog_filters_block');
     let items = div.querySelectorAll('li');
@@ -6,7 +9,7 @@
     let itemsLinksLabel = div.querySelectorAll('li label');
     let lenItemsLinks = itemsLinksA.length;
 
-    let url = window.location.href;
+    url = window.location.href;
     let vanilaUrl = url;
     // we must set parameter modified for the reason that sometimes data change thanks to html.history
     div.querySelector('#parameters-filter-form').setAttribute("modified", "");
@@ -218,5 +221,11 @@
         console.log(1);
         modified();
     }).observe(document.querySelector('div#catalog_filters_block'), {childList: true});
+
+    // button block
+    let button = document.getElementById("injectedButton");
+    button.addEventListener("click", function() {
+        alert(url);
+    });
 
 })();
