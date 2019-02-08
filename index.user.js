@@ -1,6 +1,5 @@
 (function(){
-    //let strTest = `function modified() {
-        function modified() {
+    function modified() {
     let div = document.querySelector('#catalog_filters_block');
     let items = div.querySelectorAll('li');
     let itemsLinksA = div.querySelectorAll('li a');
@@ -28,6 +27,7 @@
         });
 
         items[i].setAttribute("style","margin:3px 6px 5px 5px;padding:0;");
+        //items[i].querySelector('label').setAttribute("style","margin:0;padding-right:0;");
     }
 
     function setInput(itm) {
@@ -56,13 +56,18 @@
         categoryId[0] = categoryName.split('_')[0];
         
         let reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
-        let values = reg.exec(categoryLink)[1];
+        let values = "";
+        if(categoryLink.indexOf(categoryId[0]) !== -1) {
+            values = reg.exec(categoryLink)[1];
+        }else {
+            values = reg.exec(vanilaUrl)[1];
+        }
         
         let valuesArr = values.split(',');
-        let valuesUrlArr = "";
+        let valuesUrlArr = [];
         
         let valuesVanilaUrl = "";
-        let valuesVanilaUrlArr = "";
+        let valuesVanilaUrlArr = [];
         if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
             regVanila = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
             valuesVanilaUrl = regVanila.exec(vanilaUrl)[1];
@@ -79,7 +84,7 @@
 
             //console.log("category:" + categoryId[0] + " - " + vanilaUrl.indexOf(categoryId[0]));
             if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
-                
+                console.log("valuesArr:"+valuesArr);
                 categoryId[1] = valuesArr.filter(x => !valuesVanilaUrlArr.includes(x)
                     ).concat(
                         valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
@@ -103,9 +108,9 @@
                 }
             }
         }else {
-            if(valuesArr.length == 1) {
-                categoryId[1] = values;
-            }else {
+            //if(valuesArr.length == 1) {
+            //    categoryId[1] = values;
+            //}else {
 
                 // found this solution: https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
                 // array1 > array2 and vice versa
@@ -116,6 +121,7 @@
                         valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
                     ).join("");
                 categoryId[1] = val;
+                if(val == "" && valuesArr.length == 1) categoryId[1] = valuesArr[0];
 
                 // old solution
                 /*if(valuesArr.length < valuesVanilaUrlArr.length) {
@@ -134,7 +140,7 @@
                     }
                     if(categoryId[1]) break;
                 }*/
-            }
+            //}
         }
         console.log("category:" + categoryId[1]);
 
@@ -209,16 +215,8 @@
     }
 
     new MutationObserver(function(mutations, observer) {
-        // Do something here
-    console.log(1);
-    modified();
-        // Stop observing if needed:
-        //observer.disconnect();
+        console.log(1);
+        modified();
     }).observe(document.querySelector('div#catalog_filters_block'), {childList: true});
-    //`;
-
-    /*let scriptBody = document.createElement("script");
-    scriptBody.innerHTML = strTest;
-    document.body.appendChild(scriptBody);*/
 
 })();
