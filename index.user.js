@@ -58,10 +58,6 @@
         let reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
         let values = reg.exec(categoryLink)[1];
         
-        reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
-        let valuesVanilaUrl = reg.exec(vanilaUrl)[1];
-        let valuesVanilaUrlArr = "";
-        
         let valuesArr = "";
         let valuesUrlArr = "";
         
@@ -72,35 +68,56 @@
             valuesArr = values.split(',');
             valuesUrlArr = valuesUrl.split(',');
 
-            valuesVanilaUrlArr = valuesVanilaUrl.split(',');
+            reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+            let valuesVanilaUrl = reg.exec(vanilaUrl)[1];
+            let valuesVanilaUrlArr = valuesVanilaUrl.split(',');
+            
             if(valuesArr.length < valuesVanilaUrlArr.length && valuesVanilaUrlArr.length > 0) {
-                if(active) {
-                    let indCategoryStart = url.indexOf(categoryId[0]);
+                //if(active) {
+                    /*let indCategoryStart = url.indexOf(categoryId[0]);
                     let indCategoryFinish = url.indexOf(";",categoryId[0].length);
                     let replaceStr = categoryId[0] + "=" + values;
-                    url = url.substr(0, indCategoryStart) + replaceStr + url.substr(indCategoryFinish);
-                }else {
+                    url = url.substr(0, indCategoryStart) + replaceStr + url.substr(indCategoryFinish);*/
 
-                }
+                    for(let n = 0; n < valuesVanilaUrlArr.length; n++) {
+                        for(let n1 = 0; n1 < valuesArr.length; n1++) {
+                            if(valuesVanilaUrlArr[n] == valuesArr[n1]) {
+                                categoryId[1] = "";
+                                break;
+                            }
+
+                            categoryId[1] = valuesVanilaUrlArr[n];
+                        }
+                        if(categoryId[1]) break;
+                    }
+                    console.log("vanila: " + categoryId[1]);
+
+                //}else {
+
+                //}
             }
 
-            if(active) {
-                categoryId[1] = valuesArr[0];
-            }else {
-                let found = false;
-                for(let q = 0; q < valuesArr.length; q++) {
-                    found = false;
-                    for(let q1 = 0; q1 < valuesUrlArr.length; q1++) {
-                        if(valuesArr[q] == valuesUrlArr[q1]) {
-                            found = true;
-                            break;
-                        }
+            if(valuesArr.length > valuesVanilaUrlArr.length) {
+                //if(active) {
+                //    categoryId[1] = valuesArr[0];
+                //}else {
+                    //let found = false;
+                    for(let q = 0; q < valuesArr.length; q++) {
+                        //found = false;
+                        for(let q1 = 0; q1 < valuesUrlArr.length; q1++) {
+                            if(valuesArr[q] == valuesUrlArr[q1]) {
+                                //found = true;
+                                categoryId[1] = "";
+                                break;
+                            }
 
-                        if(!found && q1 == valuesUrlArr.length - 1) {
-                            categoryId[1] = valuesArr[q];
+                            //if(!found && q1 == valuesUrlArr.length - 1) {
+                                categoryId[1] = valuesArr[q];
+                            //}
                         }
+                        if(categoryId[1]) break;
                     }
-                }
+                //}
             }
         }else {
             categoryId[1] = values;
@@ -120,7 +137,7 @@
         console.log(categoryId);
         
         // -- end get category block
-        if(valuesArr.length > valuesVanilaUrlArr.length && valuesVanilaUrlArr.length > 0) {
+        
         // url.match(/\/[a-z=0-9;,\-]+\//gi)[1].replace(/\//g,'');
         let str = url.match(/\/[a-z=0-9;,\-]+\//gi);
         let data = [];
@@ -172,7 +189,7 @@
         }else {
             url += categoryId.join("=") + "/"
         }
-    }
+
         console.log(url);
 
     }
