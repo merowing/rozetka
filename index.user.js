@@ -144,7 +144,19 @@
             if(valuesArr.length == 1) {
                 categoryId[1] = values;
             }else {
-                if(valuesArr.length < valuesVanilaUrlArr.length) {
+
+                // found this solution: https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
+                // array1 > array2 and vice versa
+                // filter1 looking for diff between two array and concat with filter2 when arrays vice versa
+                // use arrows functions
+                let val = valuesArr.filter(x => !valuesVanilaUrlArr.includes(x)
+                    ).concat(
+                        valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
+                    ).join("");
+                categoryId[1] = val;
+
+                // old solution
+                /*if(valuesArr.length < valuesVanilaUrlArr.length) {
                     let temp  = valuesArr;
                     valuesArr = valuesVanilaUrlArr;
                     valuesVanilaUrlArr = temp;
@@ -159,7 +171,7 @@
                         categoryId[1] = valuesArr[q];
                     }
                     if(categoryId[1]) break;
-                }
+                }*/
             }
         }
         console.log("category:" + categoryId[1]);
