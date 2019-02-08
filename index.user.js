@@ -1,7 +1,8 @@
 (function(){
     
     let url = "";
-    
+    let vanilaUrl = "";
+
     function modified() {
     let div = document.querySelector('#catalog_filters_block');
     let items = div.querySelectorAll('li');
@@ -9,8 +10,12 @@
     let itemsLinksLabel = div.querySelectorAll('li label');
     let lenItemsLinks = itemsLinksA.length;
 
+    let left = 0;
+    let top = 0;
+    
     url = window.location.href;
-    let vanilaUrl = url;
+    vanilaUrl = url;
+
     // we must set parameter modified for the reason that sometimes data change thanks to html.history
     div.querySelector('#parameters-filter-form').setAttribute("modified", "");
     
@@ -21,11 +26,14 @@
 
             setInput(this);
 
+            setButtonPosition(this);
+
             e.stopPropagation();
         });
         itemsLinksLabel[i].addEventListener("click", function(e) {
             e.preventDefault();
             setInput(this);
+            setButtonPosition(this);
             e.stopImmediatePropagation();
         });
 
@@ -225,7 +233,31 @@
     // button block
     let button = document.getElementById("injectedButton");
     button.addEventListener("click", function() {
-        alert(url);
+        //alert(url);
+        window.location.href = url;
     });
+
+    function setButtonPosition(elem) {
+        let l = 0;
+        if(elem.querySelectorAll('i').length > 1) {
+            l = 1;
+        }
+        
+        let left = elem.querySelectorAll('i')[l].getBoundingClientRect().left;
+        let top = elem.getBoundingClientRect().top;
+        let width = elem.querySelectorAll('i')[l].getBoundingClientRect().width;
+        let height = elem.getBoundingClientRect().height;
+
+        let scrollTop = window.pageYOffset;
+        let scrollLeft = window.pageXOffset;
+
+        button.style.left = left + width + scrollLeft + 10 + "px";
+        button.style.top = (top - (button.offsetHeight - height)/2) + scrollTop + "px";
+
+        button.style.visibility = "visible";
+        if(url === vanilaUrl) {
+            button.style.display = "hidden";
+        }
+    }
 
 })();
