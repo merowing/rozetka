@@ -6,6 +6,7 @@
     let div = document.querySelector('#catalog_filters_block');
 
     function modified() {
+    div = document.querySelector('#catalog_filters_block');
     let items = div.querySelectorAll('li');
     let itemsLinksA = div.querySelectorAll('li a');
     let itemsLinksLabel = div.querySelectorAll('li label');
@@ -16,10 +17,10 @@
     
     url = window.location.href;
     vanilaUrl = url;
-
+    checkedItems = [];
     // we must set parameter modified for the reason that sometimes data change thanks to html.history
     div.querySelector('#parameters-filter-form').setAttribute("modified", "");
-    
+    console.log(lenItemsLinks);
     let index = 0;
     for(let i = 0; i < lenItemsLinks; i++) {
         itemsLinksA[i].addEventListener("click", function(e) {
@@ -40,7 +41,8 @@
 
         items[i].setAttribute("style","margin:3px 6px 5px 5px;padding:0;");
         
-        if(items[i].querySelector('span').getAttribute('class').indexOf('active') >= 0) {
+        if(itemsLinksA[i].querySelector('span').getAttribute('class').indexOf('active') >= 0) {
+            console.log(itemsLinksA[i].innerText);
             checkedItems.push(i);
         }
     }
@@ -65,7 +67,7 @@
             }
         }
         item.querySelector('span').setAttribute('class', classStr);
-        
+        console.log(checkedItems);
         // -- get category block
         let categoryStr = getCategory(item);
         
