@@ -250,9 +250,9 @@
     });
 
     function setButtonPosition(elemIndex) {
-        let elem = div.querySelectorAll('li')[elemIndex];
+        let elem = div.querySelectorAll('li label')[elemIndex];
         if(checkedItems.indexOf(elemIndex) === -1 && checkedItems.length >= 1) {
-            elem = div.querySelectorAll('li')[checkedItems[checkedItems.length - 1]];
+            elem = div.querySelectorAll('li label')[checkedItems[checkedItems.length - 1]];
         }
         let l = 0;
         if(elem.querySelectorAll('i').length > 1) {
