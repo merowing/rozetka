@@ -39,8 +39,7 @@
         });
 
         items[i].setAttribute("style","margin:3px 6px 5px 5px;padding:0;");
-        //items[i].querySelector('label').setAttribute("style","margin:0;padding-right:0;");
-
+        
         if(items[i].querySelector('span').getAttribute('class').indexOf('active') >= 0) {
             checkedItems.push(i);
         }
@@ -66,8 +65,6 @@
             }
         }
         item.querySelector('span').setAttribute('class', classStr);
-        console.log(checkedItems);
-        //let categoryId = getParentId(item).getAttribute('id');
         
         // -- get category block
         let categoryStr = getCategory(item);
@@ -99,15 +96,12 @@
 
         if(url.indexOf(categoryId[0]) !== -1) {
             reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
-            console.log("url: " + categoryId[0] + " - " + url);
+            
             let valuesUrl = reg.exec(url)[1];
 
-            
             valuesUrlArr = valuesUrl.split(',');
 
-            //console.log("category:" + categoryId[0] + " - " + vanilaUrl.indexOf(categoryId[0]));
             if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
-                console.log("valuesArr:"+valuesArr);
                 categoryId[1] = valuesArr.filter(x => !valuesVanilaUrlArr.includes(x)
                     ).concat(
                         valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
@@ -131,47 +125,38 @@
                 }
             }
         }else {
-            //if(valuesArr.length == 1) {
-            //    categoryId[1] = values;
-            //}else {
+            // found this solution: https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
+            // array1 > array2 and vice versa
+            // filter1 looking for diff between two array and concat with filter2 when arrays vice versa
+            // use arrows functions
+            let val = valuesArr.filter(x => !valuesVanilaUrlArr.includes(x)
+                ).concat(
+                    valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
+                ).join("");
+            categoryId[1] = val;
+            if(val == "" && valuesArr.length == 1) categoryId[1] = valuesArr[0];
 
-                // found this solution: https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
-                // array1 > array2 and vice versa
-                // filter1 looking for diff between two array and concat with filter2 when arrays vice versa
-                // use arrows functions
-                let val = valuesArr.filter(x => !valuesVanilaUrlArr.includes(x)
-                    ).concat(
-                        valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
-                    ).join("");
-                categoryId[1] = val;
-                if(val == "" && valuesArr.length == 1) categoryId[1] = valuesArr[0];
+            // old solution
+            /*if(valuesArr.length < valuesVanilaUrlArr.length) {
+                let temp  = valuesArr;
+                valuesArr = valuesVanilaUrlArr;
+                valuesVanilaUrlArr = temp;
+            }
 
-                // old solution
-                /*if(valuesArr.length < valuesVanilaUrlArr.length) {
-                    let temp  = valuesArr;
-                    valuesArr = valuesVanilaUrlArr;
-                    valuesVanilaUrlArr = temp;
-                }
-
-                for(let q = 0; q < valuesArr.length; q++) {
-                    for(let q1 = 0; q1 < valuesVanilaUrlArr.length; q1++) {
-                        if(valuesArr[q] == valuesVanilaUrlArr[q1]) {
-                            categoryId[1] = "";
-                            break;
-                        }
-                        categoryId[1] = valuesArr[q];
+            for(let q = 0; q < valuesArr.length; q++) {
+                for(let q1 = 0; q1 < valuesVanilaUrlArr.length; q1++) {
+                    if(valuesArr[q] == valuesVanilaUrlArr[q1]) {
+                        categoryId[1] = "";
+                        break;
                     }
-                    if(categoryId[1]) break;
-                }*/
-            //}
+                    categoryId[1] = valuesArr[q];
+                }
+                if(categoryId[1]) break;
+            }*/
         }
-        console.log("category:" + categoryId[1]);
-
-        console.log(categoryId);
         
         // -- end get category block
         
-        // url.match(/\/[a-z=0-9;,\-]+\//gi)[1].replace(/\//g,'');
         let str = url.match(/\/[a-z=0-9;,\-]+\//gi);
         let data = [];
         let same = false; // if category is same
@@ -210,7 +195,6 @@
                 let categoryIdNew = categoryId.slice(1, categoryId.length); // remove first element, which is not needed
                 str.push(categoryId.join('='));
             }
-            console.log(str);
             
             let t = 0;
             url = url.replace(/\/[a-z=0-9;,\-]+\//ig, function(match) {
@@ -224,8 +208,6 @@
             url += categoryId.join("=") + "/"
         }
 
-        console.log(url);
-
     }
     }
     modified();
@@ -238,14 +220,12 @@
     }
 
     new MutationObserver(function(mutations, observer) {
-        console.log(1);
         modified();
     }).observe(document.querySelector('div#catalog_filters_block'), {childList: true});
 
     // button block
     let button = document.getElementById("injectedButton");
     button.addEventListener("click", function() {
-        //alert(url);
         window.location.href = url;
     });
 
