@@ -176,16 +176,6 @@
         }
         console.log("category:" + categoryId[1]);
 
-        if(categoryId[0] === 'seller') {
-            switch(categoryId[1]) {
-                case "1":
-                    categoryId[1] = "rozetka";
-                    break;
-                case "2":
-                    categoryId[1] = "other";
-            }
-        }
-        
         console.log(categoryId);
         
         // -- end get category block
