@@ -85,7 +85,7 @@
         
         let valuesArr = values.split(',');
         let valuesUrlArr = [];
-        console.log("valArr:"+valuesArr);
+        
         let valuesVanilaUrl = "";
         let valuesVanilaUrlArr = [];
         if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
@@ -100,14 +100,14 @@
             let valuesUrl = reg.exec(url)[1];
 
             valuesUrlArr = valuesUrl.split(',');
-console.log("vanilaurl:"+vanilaUrl);
+            
             if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
                 categoryId[1] = valuesArr.filter(x => !valuesVanilaUrlArr.includes(x)
                     ).concat(
                         valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
                     ).join("");
                     if(categoryId[1] == "" && valuesArr.length == 1) categoryId[1] = valuesArr[0];
-                console.log("category:" + categoryId[1]);
+                    
             }else {
 
                 if(active) {
@@ -135,9 +135,9 @@ console.log("vanilaurl:"+vanilaUrl);
                     valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
                 ).join("");
             categoryId[1] = val;
-            console.log(categoryId[1]);
+            
             if(val == "" && valuesArr.length == 1) categoryId[1] = valuesArr[0];
-console.log(categoryId[1]);
+            
             // old solution
             /*if(valuesArr.length < valuesVanilaUrlArr.length) {
                 let temp  = valuesArr;
@@ -167,8 +167,7 @@ console.log(categoryId[1]);
         if(strRegexp.test(url)) {
             str = str[0].replace(/\//g,'');//str = str[1].replace(/\//g,'');
             str = str.split(';');
-            console.log(str);
-            console.log(active);
+            
             for(let i = 0; i < str.length; i++) {
                 data = str[i].split('=');
                 let key = data[0];
@@ -177,8 +176,7 @@ console.log(categoryId[1]);
                 if(key === categoryId[0]) {
                     same = true;
                     let valArr = val.split(',');
-                    console.log(categoryId[1]);
-                    console.log(valArr);
+                    
                     if(!active) {
                         valArr.push(categoryId[1]);
                     }else {
