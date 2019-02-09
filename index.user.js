@@ -6,6 +6,7 @@
     let div = document.querySelector('#catalog_filters_block');
 
     function modified() {
+    div = document.querySelector('#catalog_filters_block'); // leave this here, because, sometimes div not found
     let items = div.querySelectorAll('li');
     let itemsLinksA = div.querySelectorAll('li a');
     let itemsLinksLabel = div.querySelectorAll('li label');
@@ -70,10 +71,9 @@
         let categoryLink = decodeURIComponent(categoryLinkStr.href);
         //let categoryName = categoryStr.name;
         let categoryName = categoryStr.getAttribute("param");
-    console.log(categoryName);
-    console.log(categoryStr.param);
+
         let categoryId = [];
-        categoryId[0] = categoryName.split('_')[0];
+        categoryId[0] = categoryName;//categoryName.split('_')[0];
         
         let reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
         let values = "";
@@ -85,7 +85,7 @@
         
         let valuesArr = values.split(',');
         let valuesUrlArr = [];
-        
+        console.log("valArr:"+valuesArr);
         let valuesVanilaUrl = "";
         let valuesVanilaUrlArr = [];
         if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
@@ -93,20 +93,21 @@
             valuesVanilaUrl = regVanila.exec(vanilaUrl)[1];
             valuesVanilaUrlArr = valuesVanilaUrl.split(',');
         }
-
+        
         if(url.indexOf(categoryId[0]) !== -1) {
             reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
             
             let valuesUrl = reg.exec(url)[1];
 
             valuesUrlArr = valuesUrl.split(',');
-
+console.log("vanilaurl:"+vanilaUrl);
             if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
                 categoryId[1] = valuesArr.filter(x => !valuesVanilaUrlArr.includes(x)
                     ).concat(
                         valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
                     ).join("");
-                
+                    if(categoryId[1] == "" && valuesArr.length == 1) categoryId[1] = valuesArr[0];
+                console.log("category:" + categoryId[1]);
             }else {
 
                 if(active) {
@@ -134,8 +135,9 @@
                     valuesVanilaUrlArr.filter(x => !valuesArr.includes(x))
                 ).join("");
             categoryId[1] = val;
+            console.log(categoryId[1]);
             if(val == "" && valuesArr.length == 1) categoryId[1] = valuesArr[0];
-
+console.log(categoryId[1]);
             // old solution
             /*if(valuesArr.length < valuesVanilaUrlArr.length) {
                 let temp  = valuesArr;
@@ -161,9 +163,12 @@
         let data = [];
         let same = false; // if category is same
         let strRegexp = new RegExp(/\/[a-z\-0-9]+=([a-z=0-9;,\-]+)\//gi);
+        
         if(strRegexp.test(url)) {
             str = str[0].replace(/\//g,'');//str = str[1].replace(/\//g,'');
             str = str.split(';');
+            console.log(str);
+            console.log(active);
             for(let i = 0; i < str.length; i++) {
                 data = str[i].split('=');
                 let key = data[0];
@@ -172,6 +177,8 @@
                 if(key === categoryId[0]) {
                     same = true;
                     let valArr = val.split(',');
+                    console.log(categoryId[1]);
+                    console.log(valArr);
                     if(!active) {
                         valArr.push(categoryId[1]);
                     }else {
