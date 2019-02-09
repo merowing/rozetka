@@ -6,7 +6,6 @@
     let div = document.querySelector('#catalog_filters_block');
 
     function modified() {
-    div = document.querySelector('#catalog_filters_block');
     let items = div.querySelectorAll('li');
     let itemsLinksA = div.querySelectorAll('li a');
     let itemsLinksLabel = div.querySelectorAll('li label');
@@ -18,9 +17,7 @@
     url = window.location.href;
     vanilaUrl = url;
     checkedItems = [];
-    // we must set parameter modified for the reason that sometimes data change thanks to html.history
-    div.querySelector('#parameters-filter-form').setAttribute("modified", "");
-    console.log(lenItemsLinks);
+    
     let index = 0;
     for(let i = 0; i < lenItemsLinks; i++) {
         itemsLinksA[i].addEventListener("click", function(e) {
@@ -42,7 +39,6 @@
         items[i].setAttribute("style","margin:3px 6px 5px 5px;padding:0;");
         
         if(itemsLinksA[i].querySelector('span').getAttribute('class').indexOf('active') >= 0) {
-            console.log(itemsLinksA[i].innerText);
             checkedItems.push(i);
         }
     }
@@ -67,13 +63,15 @@
             }
         }
         item.querySelector('span').setAttribute('class', classStr);
-        console.log(checkedItems);
         // -- get category block
-        let categoryStr = getCategory(item);
-        
-        let categoryLink = decodeURIComponent(categoryStr.href);
-        let categoryName = categoryStr.name;
+        let categoryStr = getCategoryName(item);
+        let categoryLinkStr = getCategoryLink(item);
 
+        let categoryLink = decodeURIComponent(categoryLinkStr.href);
+        //let categoryName = categoryStr.name;
+        let categoryName = categoryStr.getAttribute("param");
+    console.log(categoryName);
+    console.log(categoryStr.param);
         let categoryId = [];
         categoryId[0] = categoryName.split('_')[0];
         
@@ -159,11 +157,12 @@
         
         // -- end get category block
         
-        let str = url.match(/\/[a-z=0-9;,\-]+\//gi);
+        let str = url.match(/\/[a-z\-0-9]+=([a-z=0-9;,\-]+)\//gi);//url.match(/\/[a-z=0-9;,\-]+\//gi);
         let data = [];
         let same = false; // if category is same
-        if(str.length > 1) {
-            str = str[1].replace(/\//g,'');
+        let strRegexp = new RegExp(/\/[a-z\-0-9]+=([a-z=0-9;,\-]+)\//gi);
+        if(strRegexp.test(url)) {
+            str = str[0].replace(/\//g,'');//str = str[1].replace(/\//g,'');
             str = str.split(';');
             for(let i = 0; i < str.length; i++) {
                 data = str[i].split('=');
@@ -199,22 +198,33 @@
             }
             
             let t = 0;
-            url = url.replace(/\/[a-z=0-9;,\-]+\//ig, function(match) {
+            let strReplace = str.join(';');
+            if(str.length !== 0) strReplace += "/";
+            url = url.replace(/[a-z0-9\-]+=[a-z=0-9;,\-]+\//ig, strReplace);
+
+            /*url = url.replace(/\/[a-z0-9\-]+=[a-z=0-9;,\-]+\//ig, function(match) {
                 if(t == 1) return "/" + str.join(';');// + "/";
                 t++;
                 return match;
-            });
-            if(str.length > 0) url += "/";
-
+            });*/
+            
+            //if(str.length > 0) url += "/";
         }else {
             url += categoryId.join("=") + "/"
         }
+        console.log(url);
 
     }
     }
     modified();
     
-    function getCategory(item) {
+    function getCategoryName(item) {
+        if(item.tagName !== "DIV" | item.getAttribute("param") === null) {
+            return getCategoryName(item.parentNode);
+        }
+        return item;
+    }
+    function getCategoryLink(item) {
         if(item.tagName === "LABEL") {
             return item.querySelector('a');
         }
