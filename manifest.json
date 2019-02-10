@@ -1,6 +1,6 @@
 {
   "name": "Rozetka",
-  "version": "1.0",
+  "version": "1.1",
   "description": "sort items in Rozetka without refresh",
   "permissions": ["tabs", "*://*.rozetka.com.ua/*"],
   "content_scripts": [
