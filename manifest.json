@@ -1,7 +1,13 @@
 {
   "name": "Rozetka",
   "version": "1.1",
-  "description": "sort items in Rozetka without refresh",
+  "description": "select items on Rozetka website without refresh",
+  "homepage_url": "https://github.com/",
+  "icons": {
+    "16":"icons/rozetka-icon-16.png",
+    "48":"icons/rozetka-icon-48.png",
+    "128":"icons/rozetka-icon-128.png"
+  },
   "permissions": ["tabs", "*://*.rozetka.com.ua/*"],
   "content_scripts": [
     {
