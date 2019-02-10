@@ -1,8 +1,8 @@
 {
   "name": "Rozetka",
-  "version": "1.1",
-  "description": "select items on Rozetka website without refresh",
-  "homepage_url": "https://github.com/",
+  "version": "1.0.2",
+  "description": "This extension allows you to select several items in the filter list on a Rozetka website without page refresh",
+  "homepage_url": "https://github.com/merowing/rozetka-filter",
   "icons": {
     "16":"icons/rozetka-icon-16.png",
     "48":"icons/rozetka-icon-48.png",
