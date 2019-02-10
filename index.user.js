@@ -14,23 +14,19 @@
         url = window.location.href;
         vanilaUrl = url;
         checkedItems = [];
-    
-        for(let i = 0; i < lenItemsLinks; i++) {
-            itemsLinksA[i].addEventListener("click", function(e) {
+    		
+      	let clickFunc = function(element, i) {
+            element.addEventListener("click", function(e) {
                 e.preventDefault();
-
                 setInput(this, i);
-
                 setButtonPosition(i);
-
                 e.stopPropagation();
-            });
-            itemsLinksLabel[i].addEventListener("click", function(e) {
-                e.preventDefault();
-                setInput(this, i);
-                setButtonPosition(i);
-                e.stopImmediatePropagation();
-            });
+            }, false);
+        };
+      
+        for(let i = 0; i < lenItemsLinks; i++) {
+            clickFunc(itemsLinksA[i], i);
+            clickFunc(itemsLinksLabel[i], i);
 
             items[i].setAttribute("style","margin:3px 6px 5px 5px;padding:0;");
             
@@ -83,7 +79,7 @@
             let valuesVanilaUrl = "";
             let valuesVanilaUrlArr = [];
             if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
-                regVanila = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+                let regVanila = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
                 valuesVanilaUrl = regVanila.exec(vanilaUrl)[1];
                 valuesVanilaUrlArr = valuesVanilaUrl.split(',');
             }
@@ -171,17 +167,14 @@
                     str[i] = data.join('=');
                 }
                 if(!same) {
-                    // use slice instead of shift, because shift more slower than slice
-                    let categoryIdNew = categoryId.slice(1, categoryId.length); // remove first element, which is not needed
                     str.push(categoryId.join('='));
                 }
                 
-                let t = 0;
                 let strReplace = str.join(';');
                 if(str.length !== 0) strReplace += "/";
                 url = url.replace(/[a-z0-9\-]+=[a-z=0-9;,\-]+\//ig, strReplace);
             }else {
-                url += categoryId.join("=") + "/"
+                url += categoryId.join("=") + "/";
             }
         }
     }
@@ -199,7 +192,7 @@
     
     // this function returns category name when we click on item
     function getCategoryName(item) {
-        if(item.tagName !== "DIV" | item.getAttribute("param") === null) {
+        if(item.tagName !== "DIV" || item.getAttribute("param") === null) {
             return getCategoryName(item.parentNode);
         }
         return item;

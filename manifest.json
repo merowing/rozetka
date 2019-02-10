@@ -6,7 +6,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.rozetka.com.ua/*"],
-      "js": ["button.js", "index.user.js"],
+      "js": ["button.min.js", "index.user.min.js"],
       "run_at": "document_end"
     }
   ],
