@@ -1,4 +1,6 @@
 # [Rozetka](https://rozetka.com.ua)
+![extension](/readme/ext1.jpg)
+
 This extension allows you to select several items in the filter list on a Rozetka website without page refresh
 
 How to use:
@@ -12,3 +14,5 @@ or
   <li>Unpack archive</li>
   <li>In menu Load upacked select folder with extension</li>
 </ol>
+
+![extension](/readme/ext2.jpg)
