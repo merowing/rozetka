@@ -3,6 +3,8 @@
 
 This extension allows you to select several items in the filter list on a Rozetka website without page refresh
 
+Last version 1.0.2: [download](https://github.com/merowing/rozetka/releases/download/1.0.2/Rozetka-v1.0.2.zip)
+
 How to use:
 1. Download extension archive.
 2. Open menu -> More tools -> Extensions
