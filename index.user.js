@@ -65,7 +65,7 @@
             let categoryId = [];
             categoryId[0] = categoryName;
             
-            let reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+            let reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9_]+)", "gi");
             let values = "";
             if(categoryLink.indexOf(categoryId[0]) !== -1) {
                 values = reg.exec(categoryLink)[1];
@@ -79,13 +79,13 @@
             let valuesVanilaUrl = "";
             let valuesVanilaUrlArr = [];
             if(vanilaUrl.indexOf(categoryId[0]) !== -1) {
-                let regVanila = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+                let regVanila = new RegExp(categoryId[0] + "=([a-z,\\-0-9_]+)", "gi");
                 valuesVanilaUrl = regVanila.exec(vanilaUrl)[1];
                 valuesVanilaUrlArr = valuesVanilaUrl.split(',');
             }
             
             if(url.indexOf(categoryId[0]) !== -1) {
-                reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9]+)", "gi");
+                reg = new RegExp(categoryId[0] + "=([a-z,\\-0-9_]+)", "gi");
                 
                 let valuesUrl = reg.exec(url)[1];
 
@@ -129,10 +129,10 @@
             
             // -- end get category block
             
-            let str = url.match(/\/[a-z\-0-9]+=([a-z=0-9;,\-]+)\//gi);
+            let str = url.match(/\/[a-z\-0-9_]+=([a-z=0-9;,\-_]+)\//gi);
             let data = [];
             let same = false; // if category the same
-            let strRegexp = new RegExp(/\/[a-z\-0-9]+=([a-z=0-9;,\-]+)\//gi);
+            let strRegexp = new RegExp(/\/[a-z\-0-9_]+=([a-z=0-9;,\-_]+)\//gi);
             
             if(strRegexp.test(url)) {
                 str = str[0].replace(/\//g,'');
@@ -172,7 +172,7 @@
                 
                 let strReplace = str.join(';');
                 if(str.length !== 0) strReplace += "/";
-                url = url.replace(/[a-z0-9\-]+=[a-z=0-9;,\-]+\//ig, strReplace);
+                url = url.replace(/[a-z0-9\-_]+=[a-z=0-9;,\-_]+\//ig, strReplace);
             }else {
                 url += categoryId.join("=") + "/";
             }
