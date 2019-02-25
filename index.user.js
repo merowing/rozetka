@@ -22,8 +22,7 @@
                 e.preventDefault();
                 setInput(this, i);
                 
-                if(items[i].querySelector('label') !== null) {
-                    console.log(labelNotFoundPosition);
+                if(element.parentNode.tagName !== "LI") {
                     if(labelNotFoundPosition < i) {
                         setButtonPosition(i - labelNotFound);
                     }else {
@@ -36,9 +35,12 @@
 
         for(let i = 0; i < lenItemsLinks; i++) {
             clickFunc(itemsLinksA[i], i);
+
             // перевіряємо елементи без тегу label
+            // запам'ятовуємо першу знайдену позицію без тегу label
+            // для правильного позиціювання кнопки
             if(itemsLinksA[i].parentNode.tagName !== "LI") {
-                clickFunc(itemsLinksLabel[i-labelNotFound], i-labelNotFound);
+                clickFunc(itemsLinksLabel[i - labelNotFound], i - labelNotFound);
             }else {
                 labelNotFound += 1;
                 if(labelNotFoundPosition == 0) labelNotFoundPosition = i;
