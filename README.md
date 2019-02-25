@@ -14,7 +14,7 @@
 1. Скачайте архів.
 2. Увійдіть в меню -> More tools -> Extensions
 3. Увімкніть Developer mode
-4. Перетяніть архів у вікно Extensions
+4. Перетягніть архів у вікно Extensions
 
 або
 
@@ -22,6 +22,13 @@
 <li>Розпакуйте архів</li>
 <li>В меню Load unpacked виберіть папку з розширенням</li>
 </ol>
+
+Як користуватись:
+1. Відкрийте будь-яку сторінку з товарами
+2. Оберіть кілька опцій ліворуч в меню сортування
+3. Натисніть на кнопку Показати
+
+>Вибір ціни разом з вибором товарів не працює
 
 ***
 
@@ -43,8 +50,15 @@ How to install:
 or
 <ol type="a">
   <li>Unpack archive</li>
-  <li>In menu Load upacked select folder with extension</li>
+  <li>In menu Load unpacked select folder with extension</li>
 </ol>
+
+How to use:
+1. Open any page with goods
+2. Select several options on the left hand side in the sort  menu
+3. Press the button Показати
+
+>The choice of price along with the choice of goods doesn't work
 
 <br />
 
