@@ -14,19 +14,35 @@
         url = window.location.href;
         vanilaUrl = url;
         checkedItems = [];
-    		
+            
+        let labelNotFound = 0;
+        let labelNotFoundPosition = 0;
       	let clickFunc = function(element, i) {
             element.addEventListener("click", function(e) {
                 e.preventDefault();
                 setInput(this, i);
-                setButtonPosition(i);
+                
+                if(items[i].querySelector('label') !== null) {
+                    console.log(labelNotFoundPosition);
+                    if(labelNotFoundPosition < i) {
+                        setButtonPosition(i - labelNotFound);
+                    }else {
+                        setButtonPosition(i);
+                    }
+                }
                 e.stopPropagation();
             }, false);
         };
-      
+
         for(let i = 0; i < lenItemsLinks; i++) {
             clickFunc(itemsLinksA[i], i);
-            clickFunc(itemsLinksLabel[i], i);
+            // перевіряємо елементи без тегу label
+            if(itemsLinksA[i].parentNode.tagName !== "LI") {
+                clickFunc(itemsLinksLabel[i-labelNotFound], i-labelNotFound);
+            }else {
+                labelNotFound += 1;
+                if(labelNotFoundPosition == 0) labelNotFoundPosition = i;
+            }
 
             items[i].setAttribute("style","margin:3px 6px 5px 5px;padding:0;");
             
@@ -181,7 +197,7 @@
     // don't run our function if the div block is not found which we are looking for
     if(div !== null) {
         modified();
-
+        
         // sometimes html5.history works and update catalog filters
         // we must assign click events again for each items
         // MutationOserverver automatically check if catalog change and run our modified function
@@ -211,11 +227,15 @@
         window.location.href = url;
     });
 
+
+    // тут помилка, якщо кількість блоків не рівна леймблам
+    // rewrite this block, do not count label's,
     function setButtonPosition(elemIndex) {
+        console.log(elemIndex);
         let elem = div.querySelectorAll('li label')[elemIndex];
-        if(checkedItems.indexOf(elemIndex) === -1 && checkedItems.length >= 1) {
+        /*if(checkedItems.indexOf(elemIndex) === -1 && checkedItems.length >= 1) {
             elem = div.querySelectorAll('li label')[checkedItems[checkedItems.length - 1]];
-        }
+        }*/
         let l = 0;
         if(elem.querySelectorAll('i').length > 1) {
             l = 1;
