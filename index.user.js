@@ -75,7 +75,6 @@
                 classStr = classStr.replace('-active','');
                 active = true; // if active, remove item from url
                 
-                /*let indChecked = checkedItems.indexOf(itemIndex);*/
                 if(indChecked !== -1) {
                     checkedItems.splice(indChecked, 1);
                 }
@@ -258,16 +257,10 @@
         window.location.href = url;
     });
 
-
-    // тут помилка, якщо кількість блоків не рівна леймблам
-    // rewrite this block, do not count label's,
     function setButtonPosition(elemIndex, element = null) {
         console.log(elemIndex);
         if(element === null) {
             let elem = div.querySelectorAll('li label')[elemIndex];
-            /*if(checkedItems.indexOf(elemIndex) === -1 && checkedItems.length >= 1) {
-                elem = div.querySelectorAll('li label')[checkedItems[checkedItems.length - 1]];
-            }*/
             let l = 0;
             if(elem.querySelectorAll('i').length > 1) {
                 l = 1;
@@ -283,11 +276,6 @@
 
             button.style.left = left + width + scrollLeft + 10 + "px";
             button.style.top = (top - (button.offsetHeight - height)/2) + scrollTop + "px";
-
-            //button.style.visibility = "visible";
-            /*if(!checkedItems.length) {
-                button.style.visibility = "hidden";
-            }*/
         }else {
             let ulBlock = element.parentNode;
 
