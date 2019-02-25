@@ -1,3 +1,4 @@
+<style>blockquote{color:orangered;}</style>
 # [Rozetka](https://rozetka.com.ua)
 ![extension](/readme/ext1.jpg)
 
@@ -5,7 +6,12 @@
 
 Остання версія 1.0.4: [download](https://github.com/merowing/rozetka/releases/download/1.0.4/Rozetka-v1.0.4.zip)
 
-Як використовувати:
+>Примітка: Розширення може працювати неправильно на деяких сторінках\
+>Знайшли помилки, повідомте про них
+
+<br />
+
+Як встановити:
 1. Скачайте архів.
 2. Увійдіть в меню -> More tools -> Extensions
 3. Увімкніть Developer mode
@@ -24,9 +30,12 @@ This extension allows you to select several items in the filter list on a Rozetk
 
 Last version 1.0.4: [download](https://github.com/merowing/rozetka/releases/download/1.0.4/Rozetka-v1.0.4.zip)
 
+>Note: this extension may not work correctly on some pages\
+>Found bugs, please tell me about them
+
 <br />
 
-How to use:
+How to install:
 1. Download archive with extension.
 2. Open menu -> More tools -> Extensions
 3. Turn on Developer mode
