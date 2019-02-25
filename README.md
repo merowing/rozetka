@@ -1,4 +1,3 @@
-<style>blockquote{color:orangered;}</style>
 # [Rozetka](https://rozetka.com.ua)
 ![extension](/readme/ext1.jpg)
 
