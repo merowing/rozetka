@@ -28,6 +28,8 @@
                     }else {
                         setButtonPosition(i);
                     }
+                }else {
+                    setButtonPosition(i, element.parentNode);
                 }
                 e.stopPropagation();
             }, false);
@@ -44,6 +46,10 @@
             }else {
                 labelNotFound += 1;
                 if(labelNotFoundPosition == 0) labelNotFoundPosition = i;
+
+                if(itemsLinksA[i].parentNode.querySelector('span').getAttribute('class').indexOf('active') >= 0) {
+                    checkedItems.push(i);
+                }
             }
 
             items[i].setAttribute("style","margin:3px 6px 5px 5px;padding:0;");
@@ -58,6 +64,8 @@
             let classStr = item.querySelector('span').getAttribute('class');
             let classStrArr = [];
             let active = false;
+            let indChecked = checkedItems.indexOf(itemIndex);
+
             if(classStr.indexOf('active') === -1) {
                 classStrArr = classStr.split(' ');
                 classStr = classStrArr[0] + ' ' + classStrArr[1] + '-active ' + classStrArr[2];
@@ -67,12 +75,30 @@
                 classStr = classStr.replace('-active','');
                 active = true; // if active, remove item from url
                 
-                let indChecked = checkedItems.indexOf(itemIndex);
+                /*let indChecked = checkedItems.indexOf(itemIndex);*/
                 if(indChecked !== -1) {
                     checkedItems.splice(indChecked, 1);
                 }
             }
             item.querySelector('span').setAttribute('class', classStr);
+
+            // if parentNode not equel label tag
+            if(item.parentNode.tagName === "LI") {
+                let classStrLi = item.parentNode.getAttribute('class');
+
+                if(classStrLi.indexOf('active') === -1) {
+                    classStrLi = classStrLi + " active";
+                }else {
+                    classStrLi = classStrLi.replace(' active', '');
+                    active = true;
+
+                    if(indChecked !== -1) {
+                        checkedItems.splice(indChecked, 1);
+                    }
+                }
+                item.parentNode.setAttribute('class', classStrLi);
+            }
+
             // -- get category block
             let categoryStr = getCategoryName(item);
             let categoryLinkStr = getCategoryLink(item);
@@ -152,6 +178,8 @@
             let same = false; // if category the same
             let strRegexp = new RegExp(/\/[a-z\-0-9_]+=([a-z=0-9;,\-_]+)\//gi);
             
+            console.log(categoryId);
+
             if(strRegexp.test(url)) {
                 str = str[0].replace(/\//g,'');
                 str = str.split(';');
@@ -194,6 +222,7 @@
             }else {
                 url += categoryId.join("=") + "/";
             }
+            console.log(url);
         }
     }
     // don't run our function if the div block is not found which we are looking for
@@ -232,32 +261,49 @@
 
     // тут помилка, якщо кількість блоків не рівна леймблам
     // rewrite this block, do not count label's,
-    function setButtonPosition(elemIndex) {
+    function setButtonPosition(elemIndex, element = null) {
         console.log(elemIndex);
-        let elem = div.querySelectorAll('li label')[elemIndex];
-        /*if(checkedItems.indexOf(elemIndex) === -1 && checkedItems.length >= 1) {
-            elem = div.querySelectorAll('li label')[checkedItems[checkedItems.length - 1]];
-        }*/
-        let l = 0;
-        if(elem.querySelectorAll('i').length > 1) {
-            l = 1;
+        if(element === null) {
+            let elem = div.querySelectorAll('li label')[elemIndex];
+            /*if(checkedItems.indexOf(elemIndex) === -1 && checkedItems.length >= 1) {
+                elem = div.querySelectorAll('li label')[checkedItems[checkedItems.length - 1]];
+            }*/
+            let l = 0;
+            if(elem.querySelectorAll('i').length > 1) {
+                l = 1;
+            }
+            
+            let left = elem.querySelectorAll('i')[l].getBoundingClientRect().left;
+            let top = elem.getBoundingClientRect().top;
+            let width = elem.querySelectorAll('i')[l].getBoundingClientRect().width;
+            let height = elem.getBoundingClientRect().height;
+
+            let scrollTop = window.pageYOffset;
+            let scrollLeft = window.pageXOffset;
+
+            button.style.left = left + width + scrollLeft + 10 + "px";
+            button.style.top = (top - (button.offsetHeight - height)/2) + scrollTop + "px";
+
+            //button.style.visibility = "visible";
+            /*if(!checkedItems.length) {
+                button.style.visibility = "hidden";
+            }*/
+        }else {
+            let ulBlock = element.parentNode;
+
+            let left = ulBlock.getBoundingClientRect().left;
+            let top = ulBlock.getBoundingClientRect().top;
+            let width = ulBlock.getBoundingClientRect().width;
+            let height = ulBlock.getBoundingClientRect().height;
+
+            let scrollTop = window.pageYOffset;
+            let scrollLeft = window.pageXOffset;
+
+            button.style.left = left + width + scrollLeft + 10 + "px";
+            button.style.top = (top - (button.offsetHeight - height)/2) + scrollTop + "px";
+
         }
-        
-        let left = elem.querySelectorAll('i')[l].getBoundingClientRect().left;
-        let top = elem.getBoundingClientRect().top;
-        let width = elem.querySelectorAll('i')[l].getBoundingClientRect().width;
-        let height = elem.getBoundingClientRect().height;
-
-        let scrollTop = window.pageYOffset;
-        let scrollLeft = window.pageXOffset;
-
-        button.style.left = left + width + scrollLeft + 10 + "px";
-        button.style.top = (top - (button.offsetHeight - height)/2) + scrollTop + "px";
-
         button.style.visibility = "visible";
-        if(!checkedItems.length) {
-            button.style.visibility = "hidden";
-        }
     }
 
 })();
