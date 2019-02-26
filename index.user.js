@@ -63,9 +63,9 @@
 
         let moreLinks = div.querySelectorAll('div[name=filter_parameters] > a');
         let moreLinksLen = moreLinks.length;
-        let lastIndex = checkedItems[checkedItems.length - 1];
         for(let c = 0; c < moreLinksLen; c++) {
             moreLinks[c].addEventListener("click", function() {
+                let lastIndex = checkedItems[checkedItems.length - 1];
                 if(checkedItems.length > 0) {
                     setButtonPosition(lastIndex);
                 }
