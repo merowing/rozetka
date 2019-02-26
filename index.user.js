@@ -65,9 +65,21 @@
         let moreLinksLen = moreLinks.length;
         for(let c = 0; c < moreLinksLen; c++) {
             moreLinks[c].addEventListener("click", function() {
-                let lastIndex = checkedItems[checkedItems.length - 1];
+                let lastIndex = checkedItems.length - 1;
                 if(checkedItems.length > 0) {
-                    setButtonPosition(lastIndex);
+                    setButtonPosition(checkedItems[lastIndex]);
+                }
+                if(lastIndex >= 0) {
+                    if(itemsLinksA[checkedItems[lastIndex]].parentNode.parentNode.getAttribute("class").indexOf("hidden") > -1) {
+                        console.log("lastIndex:" + lastIndex);
+                        if(lastIndex - 1 >= 0) {
+                            setButtonPosition(checkedItems[lastIndex - 1]);
+                        }else {
+                            button.style.visibility = "hidden";
+                        }
+                    }
+                }else {
+                    button.style.visibility = "hidden";
                 }
             });
         }
