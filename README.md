@@ -12,7 +12,7 @@
 
 Як встановити:
 1. Скачайте архів.
-2. Увійдіть в меню -> More tools -> Extensions
+2. Увійдіть в меню (Alt + E) -> More tools -> Extensions
 3. Увімкніть Developer mode
 4. Перетягніть архів у вікно Extensions
 
@@ -43,7 +43,7 @@ Last version 1.0.4: [download](https://github.com/merowing/rozetka/releases/down
 
 How to install:
 1. Download archive with extension.
-2. Open menu -> More tools -> Extensions
+2. Open menu (Alt + E) -> More tools -> Extensions
 3. Turn on Developer mode
 4. Drag and drop file archive on Extensions window
 
