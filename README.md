@@ -1,5 +1,5 @@
 # [Rozetka](https://rozetka.com.ua)
-![extension](/readme/ext1.jpg)
+![extension](/readme/main.jpg)
 
 Це розширення дозволяє вам обирати кілька фільтрів одразу без очікування завантаження нової сторінки, як це працює на сайті Rozetka.
 
