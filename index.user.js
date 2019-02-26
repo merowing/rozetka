@@ -71,11 +71,13 @@
                 }
                 if(lastIndex >= 0) {
                     if(itemsLinksA[checkedItems[lastIndex]].parentNode.parentNode.getAttribute("class").indexOf("hidden") > -1) {
-                        console.log("lastIndex:" + lastIndex);
                         if(lastIndex - 1 >= 0) {
                             setButtonPosition(checkedItems[lastIndex - 1]);
                         }else {
                             button.style.visibility = "hidden";
+                            if(c - 1 >= 0) {
+                                setButtonPosition(null, moreLinks[c-1]);
+                            }
                         }
                     }
                 }else {
@@ -305,7 +307,8 @@
             button.style.top = (top - (button.offsetHeight - height)/2) + scrollTop + "px";
         }else {
             let ulBlock = element.parentNode;
-
+            if(elemIndex === null) ulBlock = element;
+console.log(ulBlock);
             let left = ulBlock.getBoundingClientRect().left;
             let top = ulBlock.getBoundingClientRect().top;
             let width = ulBlock.getBoundingClientRect().width;
