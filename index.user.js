@@ -59,6 +59,21 @@
             }
         }
 
+        // check when button change position when we show more items in category
+
+        let moreLinks = div.querySelectorAll('div[name=filter_parameters] > a');
+        let moreLinksLen = moreLinks.length;
+        let lastIndex = checkedItems[checkedItems.length - 1];
+        for(let c = 0; c < moreLinksLen; c++) {
+            moreLinks[c].addEventListener("click", function() {
+                if(checkedItems.length > 0) {
+                    setButtonPosition(lastIndex);
+                }
+            });
+        }
+
+        // --
+
         function setInput(itm, itemIndex) {
             let item = itm;
             let classStr = item.querySelector('span').getAttribute('class');
