@@ -196,15 +196,6 @@
                 // ---------------------
 
                     console.log(link.href);
-                    
-                    //let linkStr = link.href;
-                    //let category = /\/([a-z_0-9-]+)=([a-z_0-9-]+)\//gi.exec(linkStr)[1];
-                    //let goods = /\/([a-z_0-9-]+)=([a-z_0-9-]+)\//gi.exec(linkStr)[2];
-
-                    /*let regVanillaUrl = new RegExp(/\/[a-z0-9-_]+=[a-z0-9=-_,;]+\//gi);
-                    if(regVanillaUrl.test(vanillaUrl)) {
-
-                    }*/
 
                     let clickLinkStr = linkStr.split('/').splice(-2,1).toString();
                     let linkFromItemArr = clickLinkStr.split(';');
