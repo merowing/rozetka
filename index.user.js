@@ -138,12 +138,12 @@
                 let category = params[0];
                 let item = params[1];
                 console.log(category +" "+item);
-                e.stopPropagation();
+                
                 //return;
 
                 // remove item from url ---------------------
 
-                if(!linkStr) {
+                /*if(!linkStr) {
                     let topLinks = document.querySelectorAll('.catalog-selection__list > li');
                     let itemName = this.innerText.replace(/\s*$/,"");
 
@@ -261,7 +261,7 @@
                 //}
 
                 console.log(url);
-
+                */
                 // check items on which we clicked
                 input.checked = (!input.checked) ? true : false;
                 
