@@ -3,7 +3,7 @@
     let checkItemIds = [];
     let defaultLen = 0;
 
-    // ------------
+    // parse json string data and convert to json object ------------
     let str = document.querySelector("#rz-client-state").innerText;
     str = str.replace(/&q;/g,'"');
     str = str.replace(/&a;/g,'&');
@@ -15,18 +15,18 @@
 
     let options = json.options;
     let keys = Object.keys(options);
-    let skip = ["price", "tegi"]; // option_name
+    let skip = ["price", "tegi"]; // option_name | skip blocks
     let skipFound = [];
     let categoriesObj = {};
     categoriesObj.items = [];
-    {
+    /*{
         [{
             title: "",
             category:"",
             id:"",
             name:""
         }]
-    }
+    }*/
     //console.log(keys);
     for(let i = 0; i < keys.length; i++) {
         if(("option_values" in options[keys[i]])) {
@@ -44,11 +44,12 @@
             let optionsObj = {};
             for(let j = 0; j < values.length; j++) {
                 //console.log(options[keys[i]].option_name +"-"+ values[j].option_value_name);
-                optionsObj = {};
-                optionsObj.title = optionTitle;
-                optionsObj.category = optionId;
-                optionsObj.id = values[j].option_value_name;
-                optionsObj.name = values[j].option_value_title;
+                optionsObj = {
+                    "title": optionTitle,
+                    "category": optionId,
+                    "id": values[j].option_value_name,
+                    "name": values[j].option_value_title
+                };
                 categoriesObj.items.push(optionsObj);
             }
         }
@@ -61,6 +62,9 @@
         let sidebar = document.querySelector('aside.sidebar');
         let items = sidebar.querySelectorAll('li.checkbox-filter__item > a');
 
+        // show first sidebar block because he has hidden sometimes
+        sidebar.querySelector('div').removeAttribute('style');
+
         // ----------
 
         // set new attribute param for all items
@@ -68,11 +72,12 @@
             let getCategory = getBlockCategory(items[i]);
             let getCategoryStr = getCategory.firstChild.nodeValue.replace(/^\s+|\s+$/g,'');
             //console.log(getCategory);
-            for(let j = 0; j < categoriesObj.items.length; j++) {
-                let categTitle = categoriesObj.items[j].title; // name of block
-                let categ = categoriesObj.items[j].category; // name of category
-                let valueId = categoriesObj.items[j].id; // id of item
-                let valueName = categoriesObj.items[j].name; // name of item
+            let objItems = categoriesObj.items;
+            for(let j = 0; j < objItems.length; j++) {
+                let categTitle = objItems[j].title; // name of block
+                let categ = objItems[j].category; // name of category
+                let valueId = objItems[j].id; // id of item
+                let valueName = objItems[j].name; // name of item
 
                 //console.log(getCategory);
                 if(items[i].querySelector('input').id === valueName && getCategoryStr === categTitle) {
@@ -88,33 +93,54 @@
 
         console.log(items.length);
         let len = items.length;
-        let vanillaUrl = window.location.href;
+        //let vanillaUrl = window.location.href;
 
-        let label, input, link;
-        let indexItem;
+        let label, input;//, link;
+        //let indexItem;
 
         let urlStr = "";
         let urlStrArr = [];
-        let vanillaUrlStr = "";
+        //let vanillaUrlStr = "";
 
         // -----------
         if(!defaultLen) defaultLen = len;
         
+        // якщо ми змінили метод сортування через select, перезаписуємо url
         let select = document.querySelector('.catalog-settings select');
         select.onchange = function() {
             console.log("yes");
             url = window.location.href;
         };
 
-        if(url.indexOf("=") === -1) {
-            checkItemIds = [];
-        }
+        // коли переходимо на нову сторінку, очищаємо масив відмічених предметів
+        if(url.indexOf("=") === -1) checkItemIds = [];
 
         // -----------
 
         for(let i = 0; i < len; i++) {
-            label = items[i].querySelector('label');
 
+            // hide empty items --------------
+
+            if(items[i].getAttribute('class').indexOf('disabled') >= 0 && !/\([0-9]+\)/.test(items[i].querySelector('label').textContent)) {
+                items[i].parentElement.style.display = "none";
+            }else {
+                items[i].removeAttribute('class');
+                items[i].setAttribute('class', "checkbox-filter__link checkbox-filter__link_state_disabled");
+                items[i].style.color = "#333";
+                if(items[i].querySelector('label > span')) {
+                    items[i].querySelector('label > span').style.visibility = "visible";
+                }
+            }
+
+            if(/\([0-9]+\)/.test(items[i].querySelector('label').textContent) || items[i].querySelector('input').checked) {
+                items[i].parentElement.removeAttribute("style");
+            }
+
+            // -------------------------------
+
+            //label = items[i];//.querySelector('label');
+            label = sidebar.querySelectorAll('li.checkbox-filter__item > a.checkbox-filter__link.checkbox-filter__link_state_disabled')[i];
+            
             // ------------
             /*if(len < defaultLen) {
                 console.log("test");
@@ -131,17 +157,6 @@
             }*/
 
             // ------------
-
-            // show sidebar if hidden
-            sidebar.querySelector('div').removeAttribute('style');
-
-            // hide empty items --------------
-
-            if(items[i].getAttribute('class').indexOf('disabled') >= 0) {
-                items[i].parentElement.style.display = "none";
-            }
-
-            // -------------------------------
 
             if(label.getAttribute('click')) continue;
 
@@ -167,9 +182,13 @@
             // set label event click on label tags
             label.setAttribute("click",true);
             //label.setAttribute("n", i);
-            label.addEventListener('click', function(e) {
+            label.parentElement.addEventListener('click', function(e) {
                 e.preventDefault();
+
                 
+                console.log(this.tagName);
+                console.log(label.tagName);
+
                 input = items[i].querySelector('input');
                 indexItem = i;
 
@@ -201,7 +220,7 @@
                     urlStrArr = urlStr.split(';');
                 }
 
-                let params = this.getAttribute('param').split('=');
+                let params = items[i].querySelector('label').getAttribute('param').split('=');
                 let category = params[0];
                 let item = params[1];
                 console.log(category +" "+item);
