@@ -8,6 +8,7 @@
     let url = window.location.href;
     let checkItemIds = [];
     let defaultLen = 0;
+    let urlCategoryId = 0;
 
     // parse json string data and convert to json object ------------
     let str = document.querySelector("#rz-client-state").innerText;
@@ -121,6 +122,12 @@
 
         // -----------
         if(!defaultLen) defaultLen = len;
+
+        let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
+        if(urlCategoryId !== currentCategoryId) {
+            urlCategoryId = currentCategoryId;
+            console.log("url");
+        }
         
         // якщо ми змінили метод сортування через select, перезаписуємо url
         let select = document.querySelector('.catalog-settings select');
