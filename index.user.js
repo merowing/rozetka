@@ -1,19 +1,34 @@
 (function(){
+
+    //chrome.extension.sendMessage(
+    //    {contentScriptQuery: "queryPrice", itemId: 12345},
+    //    data => console.log(data));
+        
+//return;
     let url = window.location.href;
     let checkItemIds = [];
     let defaultLen = 0;
 
     // parse json string data and convert to json object ------------
     let str = document.querySelector("#rz-client-state").innerText;
-    str = str.replace(/&q;/g,'"');
-    str = str.replace(/&a;/g,'&');
-    
-    let start = str.match(/"options/).index;
-    let end = str.indexOf(",\"chosen\"", start);
-    let json = JSON.parse("{" + str.substr(start,end-start) + "}");
+    let json, options;
+    if(/&q;/.test(str)) {
+        str = str.replace(/&q;/g,'"');
+        str = str.replace(/&a;/g,'&');
+        
+        let start = str.match(/"options/).index;
+        let end = str.indexOf(",\"chosen\"", start);
+        json = JSON.parse("{" + str.substr(start,end-start) + "}");
+        
+        options = json.options;
+    }else {
+        json = JSON.parse(str);
+        options = json.data.options;
+    }
     console.log(json);
-
-    let options = json.options;
+    //console.log(options);
+//return;
+    
     let keys = Object.keys(options);
     let skip = ["price", "tegi"]; // option_name | skip blocks
     let skipFound = [];
@@ -57,9 +72,11 @@
     console.log(categoriesObj);
     // -------------
 
+
     function generation() {
         //return;
         let sidebar = document.querySelector('aside.sidebar');
+        if(sidebar) {
         let items = sidebar.querySelectorAll('li.checkbox-filter__item > a');
 
         // show first sidebar block because he has hidden sometimes
@@ -117,6 +134,14 @@
 
         // -----------
 
+        let topClearItems = document.querySelector('ul.catalog-selection__list');
+        let test = function(e) {
+            //alert(e.currentTarget.tagName);
+            url = window.location.href;
+        };
+        topClearItems.removeEventListener('click', test, false);
+        topClearItems.addEventListener('click', test, false);
+
         for(let i = 0; i < len; i++) {
 
             // hide empty items --------------
@@ -170,10 +195,24 @@
                     }
                 }
 
-                for(let j = 0; j < checkItemIds.length; j++) {
-                    if(!items[i].querySelector('input').checked && checkItemIds[j] === checkItemParamStr) {
+                /*for(let j = 0; j < checkItemIds.length; j++) {
+                    if(!items[i].querySelector('input').checked && checkItemIds[j].toLowerCase() === items[i].querySelector('label').firstChild.nodeValue.replace(/^\s+|\s+$/g,'').toLocaleLowerCase()) {
                         checkItemIds.splice(indParam, 1);
+                        console.log(items[i].querySelector('input').checked);
+                        console.log(items[i]);
+                        console.log(checkItemIds[j].toLowerCase() === items[i].querySelector('label').firstChild.nodeValue.replace(/^\s+|\s+$/g,'').toLocaleLowerCase());
+                        console.log(checkItemIds[j].toLowerCase() +"==="+ items[i].querySelector('label').firstChild.nodeValue.replace(/^\s+|\s+$/g,'').toLocaleLowerCase());
                         url = window.location.href;
+                    }
+                }*/
+                let urlItems = getItems(url);
+                if(urlItems) {
+                    for(let j = 0; j < checkItemIds.length; j++) {
+                        if(urlItems.indexOf(checkItemIds[j]) === -1) {
+                            console.log(urlItems);
+                            checkItemIds.splice(j, 1);
+                            j--;
+                        }
                     }
                 }
             }
@@ -319,7 +358,7 @@
                             }else {
                                 let index = urlCategoryArr2.indexOf(item);
                                 urlCategoryArr2.splice(index,1);
-
+                                
                                 //let indexId = checkItemIds.indexOf(indexItem);
                                 let indexId = checkItemIds.indexOf(item);
                                 checkItemIds.splice(indexId,1);
@@ -373,6 +412,7 @@
         }
 
         console.log(checkItemIds);
+        }
     }
 
     //setTimeout(function(){
@@ -384,7 +424,8 @@
     }).observe(document.querySelector('app-root'), {childList: true, subtree: true});
 
     function getItems(str) {
-        return str.toString().match(/=([a-z0-9,_]+)/gi).map(function(item) {
+        if(str.toString().match(/=([a-z0-9,_\-]+)/gi) === null) return null;
+        return str.toString().match(/=([a-z0-9,_\-]+)/gi).map(function(item) {
             return item.replace("=", "");
         }).join(",");
     }
