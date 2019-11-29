@@ -7,74 +7,109 @@
 //return;
     let url = window.location.href;
     let checkItemIds = [];
-    let defaultLen = 0;
+    //let defaultLen = 0;
     let urlCategoryId = 0;
-
-    // parse json string data and convert to json object ------------
-    let str = document.querySelector("#rz-client-state").innerText;
-    let json, options;
-    if(/&q;/.test(str)) {
-        str = str.replace(/&q;/g,'"');
-        str = str.replace(/&a;/g,'&');
-        
-        let start = str.match(/"options/).index;
-        let end = str.indexOf(",\"chosen\"", start);
-        json = JSON.parse("{" + str.substr(start,end-start) + "}");
-        
-        options = json.options;
-    }else {
-        json = JSON.parse(str);
-        options = json.data.options;
-    }
-    console.log(json);
-    //console.log(options);
-//return;
-    
-    let keys = Object.keys(options);
-    let skip = ["price", "tegi"]; // option_name | skip blocks
-    let skipFound = [];
     let categoriesObj = {};
-    categoriesObj.items = [];
-    /*{
-        [{
-            title: "",
-            category:"",
-            id:"",
-            name:""
-        }]
-    }*/
-    //console.log(keys);
-    for(let i = 0; i < keys.length; i++) {
-        if(("option_values" in options[keys[i]])) {
 
-            skipFound = [];
-            skipFound = skip.filter(function(val) {
-                return (options[keys[i]].option_name.indexOf(val) >= 0);
-            });
-            if(skipFound.length) continue;
-
-            let optionId = options[keys[i]].option_name;
-            let optionTitle = options[keys[i]].option_title;
-
-            let values = options[keys[i]].option_values;
-            let optionsObj = {};
-            for(let j = 0; j < values.length; j++) {
-                //console.log(options[keys[i]].option_name +"-"+ values[j].option_value_name);
-                optionsObj = {
-                    "title": optionTitle,
-                    "category": optionId,
-                    "id": values[j].option_value_name,
-                    "name": values[j].option_value_title
-                };
-                categoriesObj.items.push(optionsObj);
+    function pageLoad() {
+        // parse json string data and convert to json object ------------
+        let str = document.querySelector("#rz-client-state2").innerText;
+        let json, options;
+        if(/&q;/.test(str)) {
+            str = str.replace(/&q;/g,'"');
+            str = str.replace(/&a;/g,'&');
+            
+            if(str.indexOf("\"options") >= 0) {
+                let start = str.match(/"options/).index;
+                let end = str.indexOf(",\"chosen\"", start);
+                json = JSON.parse("{" + str.substr(start,end-start) + "}");
+                
+                options = json.options;
             }
+        }else {
+            json = JSON.parse(str);
+            options = json.data.options;
+        }
+        console.log(json);
+        //console.log(options);
+    //return;
+        if(json) {
+            let keys = Object.keys(options);
+            let skip = ["price", "tegi"]; // option_name | skip blocks
+            let skipFound = [];
+            categoriesObj = {};
+            categoriesObj.items = [];
+            /*{
+                [{
+                    title: "",
+                    category:"",
+                    id:"",
+                    name:""
+                }]
+            }*/
+            //console.log(keys);
+            for(let i = 0; i < keys.length; i++) {
+                if(("option_values" in options[keys[i]])) {
+
+                    skipFound = [];
+                    skipFound = skip.filter(function(val) {
+                        return (options[keys[i]].option_name.indexOf(val) >= 0);
+                    });
+                    if(skipFound.length) continue;
+
+                    let optionId = options[keys[i]].option_name;
+                    let optionTitle = options[keys[i]].option_title;
+
+                    let values = options[keys[i]].option_values;
+                    let optionsObj = {};
+                    for(let j = 0; j < values.length; j++) {
+                        //console.log(options[keys[i]].option_name +"-"+ values[j].option_value_name);
+                        optionsObj = {
+                            "title": optionTitle,
+                            "category": optionId,
+                            "id": values[j].option_value_name,
+                            "name": values[j].option_value_title
+                        };
+                        categoriesObj.items.push(optionsObj);
+                    }
+                }
+            }
+            console.log(categoriesObj);
+            // -------------
         }
     }
-    console.log(categoriesObj);
-    // -------------
-
 
     function generation() {
+
+        // when we move to another page, parse json items parameters again
+        let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
+        if(urlCategoryId !== currentCategoryId) {
+            urlCategoryId = currentCategoryId;
+            console.log("refresh url");
+            chrome.runtime.sendMessage({type:'loaddata', id:currentCategoryId},function(response) {
+                console.log(response);
+
+                if(!document.querySelector("#rz-client-state2")) {
+                    let elem = document.createElement("script");
+                    elem.setAttribute("id","rz-client-state2");
+                    elem.type = "application/json";
+                    elem.innerHTML = response;//JSON.stringify(response);
+                    document.body.appendChild(elem);
+                }else {
+                    document.querySelector("#rz-client-state2").innerHTML = response;
+                }
+
+                pageLoad();
+            });
+            //pageLoad();
+
+            if(window.location.href.indexOf('=') === -1) {
+                checkItemIds = [];
+                url = window.location.href;
+            }
+        }
+
+        //if(categoriesObj.length) {
         //return;
         let sidebar = document.querySelector('aside.sidebar');
         if(sidebar) {
@@ -121,13 +156,7 @@
         //let vanillaUrlStr = "";
 
         // -----------
-        if(!defaultLen) defaultLen = len;
-
-        let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
-        if(urlCategoryId !== currentCategoryId) {
-            urlCategoryId = currentCategoryId;
-            console.log("url");
-        }
+        //if(!defaultLen) defaultLen = len;
         
         // якщо ми змінили метод сортування через select, перезаписуємо url
         let select = document.querySelector('.catalog-settings select');
@@ -137,7 +166,7 @@
         };
 
         // коли переходимо на нову сторінку, очищаємо масив відмічених предметів
-        if(url.indexOf("=") === -1) checkItemIds = [];
+        //if(url.indexOf("=") === -1) checkItemIds = [];
 
         // -----------
 
@@ -420,6 +449,7 @@
 
         console.log(checkItemIds);
         }
+    //}
     }
 
     //setTimeout(function(){
