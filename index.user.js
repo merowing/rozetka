@@ -468,6 +468,10 @@
         window.open(url, "_self");
     });
 
+    let styleStr = document.createElement("style");
+    styleStr.innerHTML = "li.checkbox-filter__item {cursor: pointer;transition: all .2s ease;}li.checkbox-filter__item:hover {background-color:#f4faf6;}li.checkbox-filter__item:hover a.checkbox-filter__link.checkbox-filter__link_state_disabled label:before {border-color:#221f1f;}";
+    document.getElementsByTagName("body")[0].appendChild(styleStr);
+
     //setTimeout(function(){
       //generation();
     //}, 1000);
