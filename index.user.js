@@ -11,9 +11,9 @@
     let urlCategoryId = 0;
     let categoriesObj = {};
 
-    function pageLoad() {
+    function pageLoad(json) {
         // parse json string data and convert to json object ------------
-        let str = document.querySelector("#rz-client-state2").innerText;
+        /*let str = document.querySelector("#rz-client-state2").innerText;
         let json, options;
         if(/&q;/.test(str)) {
             str = str.replace(/&q;/g,'"');
@@ -26,10 +26,10 @@
                 
                 options = json.options;
             }
-        }else {
-            json = JSON.parse(str);
+        }else {*/
+            json = JSON.parse(json);
             options = json.data.options;
-        }
+        //}
         console.log(json);
         //console.log(options);
     //return;
@@ -81,34 +81,15 @@
 
     function generation() {
 
-        // when we move to another page, parse json items parameters again
-        let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
-        if(urlCategoryId !== currentCategoryId) {
-            urlCategoryId = currentCategoryId;
-            console.log("refresh url");
-            chrome.runtime.sendMessage({type:'loaddata', id:currentCategoryId},function(response) {
-                console.log(response);
+        
 
-                if(!document.querySelector("#rz-client-state2")) {
-                    let elem = document.createElement("script");
-                    elem.setAttribute("id","rz-client-state2");
-                    elem.type = "application/json";
-                    elem.innerHTML = response;//JSON.stringify(response);
-                    document.body.appendChild(elem);
-                }else {
-                    document.querySelector("#rz-client-state2").innerHTML = response;
-                }
-
-                pageLoad();
-            });
-            //pageLoad();
-
-            if(window.location.href.indexOf('=') === -1) {
-                checkItemIds = [];
-                url = window.location.href;
-            }
+        if(window.location.href.indexOf('=') === -1) {
+            //checkItemIds = [];
+            //url = window.location.href;
         }
 
+        console.log(categoriesObj);
+        if(!categoriesObj.items) return;
         //if(categoriesObj.length) {
         //return;
         let sidebar = document.querySelector('aside.sidebar');
@@ -455,10 +436,48 @@
     //setTimeout(function(){
       //generation();
     //}, 1000);
+    let i = 0;
+    //let n = 4;
+    if(document.querySelector('app-root')) {
     new MutationObserver(function(mutations, observer) {
-        console.log(1);
-        generation();
+        console.log(i++);
+        //i++;
+        //if(i%n === 0) {
+            if(!/\/c([0-9]+)\//.exec(window.location.href)) return;
+        // when we move to another page, parse json items parameters again
+        let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
+        if(urlCategoryId !== currentCategoryId) {
+            checkItemIds = [];
+            url = window.location.href;
+            //n = 4;
+            urlCategoryId = currentCategoryId;
+            console.log("refresh url");
+            chrome.runtime.sendMessage({type:'loaddata', id:currentCategoryId},function(response) {
+                //console.log(response);
+
+                /*if(!document.querySelector("#rz-client-state2")) {
+                    let elem = document.createElement("script");
+                    elem.setAttribute("id","rz-client-state2");
+                    elem.type = "application/json";
+                    elem.innerHTML = response;//JSON.stringify(response);
+                    document.body.appendChild(elem);
+                }else {
+                    document.querySelector("#rz-client-state2").innerHTML = response;
+                }*/
+
+                pageLoad(response);
+                console.log("page load");
+                console.log("p:"+categoriesObj);
+                generation();
+            });
+            //pageLoad();
+        }else {
+            generation();
+        }
+         //   generation();
+        //}
     }).observe(document.querySelector('app-root'), {childList: true, subtree: true});
+    }
 
     function getItems(str) {
         if(str.toString().match(/=([a-z0-9,_\-]+)/gi) === null) return null;
