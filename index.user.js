@@ -433,7 +433,13 @@
                 console.log(this.offsetTop + this.offsetHeight/2);
                 console.log(this.offsetHeight + this.offsetLeft + 10);
                 let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
-                let l = document.querySelector('.sidebar-block').offsetWidth + document.querySelector('.sidebar-block').getBoundingClientRect().left;
+                //let l = document.querySelector('.sidebar-block').offsetWidth + document.querySelector('.sidebar-block').getBoundingClientRect().left;
+                let l = 0;
+                if(this.querySelector("span")) {
+                    l = this.querySelector("span").offsetWidth + this.querySelector("span").getBoundingClientRect().left + 10;
+                }else {
+                    l = this.offsetWidth + this.getBoundingClientRect().left - 10;
+                }
                 injectedButton.style.top = t + "px";
                 injectedButton.style.left = l + "px";
                 // ------------------
