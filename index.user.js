@@ -10,6 +10,7 @@
     //let defaultLen = 0;
     let urlCategoryId = 0;
     let categoriesObj = {};
+    let injectedButton = document.querySelector("#injectedButton");
 
     function pageLoad(json) {
         // parse json string data and convert to json object ------------
@@ -79,14 +80,24 @@
         }
     }
 
+    let buttonClicked = false;
     function generation() {
 
+        // ----------------
+        // when we clicked on the button "Сбросить"
+        // clear url and checkeditems array
+        let button = document.querySelector('.catalog-selection__link.catalog-selection__link_type_reset');
+        if(button)
+        button.addEventListener("click",function(e){
+            buttonClicked = true;
+        });
         
-
-        if(window.location.href.indexOf('=') === -1) {
-            //checkItemIds = [];
-            //url = window.location.href;
+        if(window.location.href.indexOf('=') === -1 && buttonClicked) {
+            checkItemIds = [];
+            url = window.location.href;
+            buttonClicked = false;
         }
+        // ----------------
 
         console.log(categoriesObj);
         if(!categoriesObj.items) return;
@@ -413,6 +424,20 @@
                 input.checked = (!input.checked) ? true : false;
 
                 console.log(checkItemIds);
+
+                // ------------------
+
+                //let injectedButton = document.querySelector("#injectedButton");
+                injectedButton.style.visibility = 'visible';
+
+                console.log(this.offsetTop + this.offsetHeight/2);
+                console.log(this.offsetHeight + this.offsetLeft + 10);
+                let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
+                let l = document.querySelector('.sidebar-block').offsetWidth + document.querySelector('.sidebar-block').getBoundingClientRect().left;
+                injectedButton.style.top = t + "px";
+                injectedButton.style.left = l + "px";
+                // ------------------
+
                 e.stopPropagation();
             });
         }
@@ -432,6 +457,10 @@
         }
     //}
     }
+
+    injectedButton.addEventListener("click", function() {
+        window.open(url, "_self");
+    });
 
     //setTimeout(function(){
       //generation();
