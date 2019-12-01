@@ -3,7 +3,18 @@
 
 Це розширення дозволяє вам обирати кілька фільтрів одразу без очікування завантаження нової сторінки, як це працює на сайті Rozetka.
 
-Остання версія 1.0.4: [download](https://github.com/merowing/rozetka/releases/download/1.0.4/Rozetka-v1.0.4.zip)
+>Для нового дизайну:
+
+* Остання версія 1.0.5: [download](https://github.com/merowing/rozetka/releases/download/1.0.5/Rozetka2-v1.0.5.zip)
+* нова гілка: [new_design](https://github.com/merowing/rozetka/tree/new_design)
+
+<br />
+
+>Для старого:
+
+* Остання версія 1.0.4.1: [download](https://github.com/merowing/rozetka/releases/download/1.0.4.1/Rozetka-v1.0.4.1.zip)
+
+<br />
 
 >Примітка: Розширення може працювати неправильно на деяких сторінках\
 >Знайшли помилки, повідомте про них
@@ -34,7 +45,18 @@
 
 This extension allows you to select several items in the filter list on a Rozetka website without page refresh
 
-Last version 1.0.4: [download](https://github.com/merowing/rozetka/releases/download/1.0.4/Rozetka-v1.0.4.zip)
+>For new design:
+
+* Last version 1.0.5: [download](https://github.com/merowing/rozetka/releases/download/1.0.5/Rozetka2-v1.0.5.zip)
+* new branch: [new_design](https://github.com/merowing/rozetka/tree/new_design)
+
+<br />
+
+>For old design:
+
+* Last version 1.0.4.1: [download](https://github.com/merowing/rozetka/releases/download/1.0.4.1/Rozetka-v1.0.4.1.zip)
+
+<br />
 
 >Note: this extension may not work correctly on some pages\
 >Found bugs, please tell me about them
