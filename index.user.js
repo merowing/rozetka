@@ -49,6 +49,10 @@
     let buttonClicked = false;
     function generation() {
 
+        if(injectedButtonClick) {
+            injectedButtonClick = false;
+            injectedButton.style.visibility = "hidden";
+        }
         // ----------------
         // when we clicked on the button "Сбросить"
         // clear url and checkeditems array
@@ -252,7 +256,9 @@
         }
     }
 
+    let injectedButtonClick = false;
     injectedButton.addEventListener("click", function() {
+        injectedButtonClick = true;
         window.open(url, "_self");
     });
 
@@ -270,6 +276,7 @@
             if(urlCategoryId !== currentCategoryId) {
                 checkItemIds = [];
                 url = window.location.href;
+                injectedButton.style.visibility = 'hidden';
             
                 urlCategoryId = currentCategoryId;
             
