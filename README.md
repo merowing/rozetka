@@ -16,6 +16,7 @@
 
 <br />
 
+><font color=orange><u>Для версії 1.0.4.1</u></font>\
 >Примітка: Розширення може працювати неправильно на деяких сторінках\
 >Знайшли помилки, повідомте про них
 
@@ -58,6 +59,7 @@ This extension allows you to select several items in the filter list on a Rozetk
 
 <br />
 
+><font color=orange><u>For version 1.0.4.1</u></font>\
 >Note: this extension may not work correctly on some pages\
 >Found bugs, please tell me about them
 
