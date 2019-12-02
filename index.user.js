@@ -124,6 +124,7 @@
 
             let topClearItems = document.querySelector('ul.catalog-selection__list');
             let test = function(e) {
+                injectedButton.style.visibility = "hidden";
                 url = window.location.href;
             };
             topClearItems.removeEventListener('click', test, false);
