@@ -73,8 +73,8 @@
         
         let sidebar = document.querySelector('aside.sidebar');
         if(sidebar) {
-            let items = sidebar.querySelectorAll('li.checkbox-filter__item > a');
-
+            let items = sidebar.querySelectorAll('.filter_layout_sidebar > ul > li > a');
+            
             // show first sidebar block because he has hidden sometimes
             sidebar.querySelector('div').removeAttribute('style');
 
@@ -91,8 +91,17 @@
                     let valueId = objItems[j].id; // id of item
                     let valueName = objItems[j].name; // name of item
 
-                    if(items[i].querySelector('input').id === valueName && getCategoryStr === categTitle) {
-                        items[i].querySelector('label').setAttribute("param", categ+"="+valueId);
+                    if(items[i].querySelector('input')) {
+                        if(items[i].querySelector('input').id === valueName && getCategoryStr === categTitle) {
+                            items[i].querySelector('label').setAttribute("param", categ+"="+valueId);
+                        }
+                    }else {
+                        if(items[i].innerText === valueName && getCategoryStr === categTitle) {
+                            items[i].setAttribute("param", categ+"="+valueId);
+                        }
+                        //let createLabel = document.createElement("label");
+                        //createLabel.setAttribute("param", categ+"="+valueId);
+                        //items[i].appendChild(createLabel);
                     }
                 }
             }
@@ -122,37 +131,79 @@
 
             for(let i = 0; i < len; i++) {
 
+                //if(!items[i].querySelector('input')) {
+                //    continue;
+                //}
+                //tile-filter__link tile-filter__link_state_active - checked
+                //tile-filter__link tile-filter__link_state_disabled - disabled
+
                 // hide empty items --------------
 
-                if(items[i].getAttribute('class').indexOf('disabled') >= 0 && !/\([0-9]+\)/.test(items[i].querySelector('label').textContent)) {
-                    items[i].parentElement.style.display = "none";
+                if(items[i].getAttribute('class').indexOf('disabled') >= 0) {
+                    if(items[i].querySelector('input')) {
+                        if(!items[i].querySelector('input').checked && !/\([0-9]+\)/.test(items[i].querySelector('label').textContent)) {
+                            items[i].parentElement.style.display = "none";
+                        }
+                    }else {
+                        if(!items[i].getAttribute("visible"))
+                        items[i].parentElement.style.display = "none";
+                    }
                 }else {
                     items[i].removeAttribute('class');
-                    items[i].setAttribute('class', "checkbox-filter__link checkbox-filter__link_state_disabled");
                     items[i].style.color = "#333";
-                    if(items[i].querySelector('label > span')) {
-                        items[i].querySelector('label > span').style.visibility = "visible";
+                    if(items[i].querySelector('input')) {
+                        //items[i].removeAttribute('class');
+                        items[i].setAttribute('class', "checkbox-filter__link checkbox-filter__link_state_disabled");
+                        //items[i].style.color = "#333";
+                        if(items[i].querySelector('label > span')) {
+                            items[i].querySelector('label > span').style.visibility = "visible";
+                        }
+                    }else {
+                        //items[i].removeAttribute('class');
+                        items[i].setAttribute('class', "tile-filter__link tile-filter__link_state_disabled");
+                        items[i].setAttribute("visible", true);
+                        //items[i].style.color = "#333";
                     }
                 }
 
-                if(/\([0-9]+\)/.test(items[i].querySelector('label').textContent) || items[i].querySelector('input').checked) {
-                    items[i].parentElement.removeAttribute("style");
-                }
+                //if(/\([0-9]+\)/.test(items[i].querySelector('label').textContent) || items[i].querySelector('input').checked) {
+                //    items[i].parentElement.removeAttribute("style");
+                //}
 
                 // -------------------------------
-
-                label = sidebar.querySelectorAll('li.checkbox-filter__item > a.checkbox-filter__link.checkbox-filter__link_state_disabled')[i];
+                
+                //label = sidebar.querySelectorAll('li.checkbox-filter__item > a.checkbox-filter__link.checkbox-filter__link_state_disabled')[i];
+                label = sidebar.querySelectorAll('.filter_layout_sidebar > ul > li > a')[i];
 
                 if(label.getAttribute('click')) continue;
 
-                let checkItemParam = items[i].querySelector('label').getAttribute('param');
+                let checkItemParam = null;
+                if(items[i].querySelector('label')) {
+                    checkItemParam = items[i].querySelector('label').getAttribute('param');
+                }else {
+                    checkItemParam = items[i].getAttribute('param');
+                }
                 if(checkItemParam) {
                     let checkItemParamStr = checkItemParam.split('=')[1];
                     let indParam = checkItemIds.indexOf(checkItemParamStr);
-                    if(items[i].querySelector('input').checked) {
-                        if(indParam === -1) {
+
+                    let chd = false;
+                    //if(items[i].querySelector('input')) {
+                    //    chd = items[i].querySelector('input').checked;
+                    //}else {
+                        //if(items[i].getAttribute("class").indexOf("active") !== -1)
+                    //    let itemFromUrl = getItems(window.location.href);
+                    //    if(itemFromUrl.indexOf(checkItemParamStr) !== -1)
+                    //    chd = true;
+                    //}
+                    let itemFromUrl = getItems(window.location.href);
+                    if(itemFromUrl)
+                        chd = (itemFromUrl.indexOf(checkItemParamStr) !== -1);
+
+                    if(chd && indParam === -1) {
+                        //if(indParam === -1) {
                             checkItemIds.push(checkItemParamStr);
-                        }
+                        //}
                     }
 
                     let urlItems = getItems(url);
@@ -171,7 +222,9 @@
             
                 label.parentElement.addEventListener('click', function(e) {
                     e.preventDefault();
-
+console.log(label);
+console.log(this);
+console.log(items[i]);
                     input = items[i].querySelector('input');
                     indexItem = i;
 
@@ -182,17 +235,31 @@
                         urlStrArr = urlStr.split(';');
                     }
 
-                    let params = items[i].querySelector('label').getAttribute('param').split('=');
+                    let params = null;
+                    if(items[i].querySelector('label')) {
+                        params = items[i].querySelector('label').getAttribute('param').split('=');
+                    }else {
+                        params = items[i].getAttribute('param').split('=');
+                    }
                     let category = params[0];
                     let item = params[1];
-
-                    for(let i = 0; i < urlStrArr.length; i++) {
-                        if(urlStrArr[i].indexOf(category) >= 0) {
+console.log(category +" - "+ item);
+                    for(let j = 0; j < urlStrArr.length; j++) {
+                        if(urlStrArr[j].indexOf(category) >= 0) {
                             categoryNotFound = false;
-                            let urlCategoryArr1 = urlStrArr[i].split('=');
+                            let urlCategoryArr1 = urlStrArr[j].split('=');
                             let urlCategoryArr2 = urlCategoryArr1[1].split(',');
 
-                            if(!input.checked) {
+                            let addToArr = false;
+                            console.log(input);
+                            if(input) {
+                                addToArr = input.checked;
+                            }else {
+                                addToArr = (items[i].getAttribute("class").indexOf("active") !== -1) ? true : false;
+                            }
+                            console.log(this.getAttribute("class"));
+                            console.log(addToArr);
+                            if(!addToArr) {
                                 urlCategoryArr2.push(item);
                                 checkItemIds.push(item);
                             }else {
@@ -204,10 +271,10 @@
                             }
                             if(urlCategoryArr2.length !== 0) {
                                 urlCategoryArr1[1] = urlCategoryArr2.join(',');
-                                urlStrArr[i] = urlCategoryArr1.join('=');
+                                urlStrArr[j] = urlCategoryArr1.join('=');
                             }else {
                                 // remove category from url if category is empty
-                                urlStrArr.splice(i,1);
+                                urlStrArr.splice(j,1);
                             }
                             break;
                         }
@@ -219,24 +286,38 @@
 
                     let slash = (urlStrArr.length > 0) ? urlStrArr.join(';') + '/' : '';
                     url = urlArr.join('/') + slash;
-                
+                console.log(url);
                     // check items on which we clicked
-                    input.checked = (!input.checked) ? true : false;
+                    if(items[i].querySelector('input')) {
+                        input.checked = (!input.checked) ? true : false;
+                    }else {
+                        console.log("a:"+items[i]);
+                        let activeClass = items[i].getAttribute("class");
+                        if(activeClass.indexOf("active") !== -1) {
+                            items[i].setAttribute("class", activeClass.replace(" active", ""));
+                            items[i].style.color = "#333";
+                        }else {
+                            //items[i].removeAttribute("class");
+                            items[i].setAttribute("class", activeClass + " active");
+                            items[i].removeAttribute("style");
+                        }
+                    }
 
                     // ------------------
+                    if(items[i].querySelector('input')) {
+                        //let injectedButton = document.querySelector("#injectedButton");
+                        injectedButton.style.visibility = 'visible';
 
-                    //let injectedButton = document.querySelector("#injectedButton");
-                    injectedButton.style.visibility = 'visible';
-
-                    let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
-                    let l = 0;
-                    if(this.querySelector("span")) {
-                        l = this.querySelector("span").offsetWidth + this.querySelector("span").getBoundingClientRect().left + 10;
-                    }else {
-                        l = this.offsetWidth + this.getBoundingClientRect().left - 10;
+                        let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
+                        let l = 0;
+                        if(this.querySelector("span")) {
+                            l = this.querySelector("span").offsetWidth + this.querySelector("span").getBoundingClientRect().left + 10;
+                        }else {
+                            l = this.offsetWidth + this.getBoundingClientRect().left - 10;
+                        }
+                        injectedButton.style.top = t + "px";
+                        injectedButton.style.left = l + "px";
                     }
-                    injectedButton.style.top = t + "px";
-                    injectedButton.style.left = l + "px";
                     // ------------------
 
                     e.stopPropagation();
@@ -244,12 +325,25 @@
             }
 
             for(let i = 0; i < items.length; i++) {
-                items[i].querySelector('input').checked = false;
-                let checkParam = items[i].querySelector('label').getAttribute('param');
+                //if(!items[i].querySelector('input')) continue;
+                if(items[i].querySelector('input')) {
+                    items[i].querySelector('input').checked = false;
+                }
+                let checkParam = (items[i].querySelector('input')) ? items[i].querySelector('label').getAttribute('param') : items[i].getAttribute('param');
                 if(checkParam) {
                     let checkParamVal = checkParam.split('=')[1];
                     if(checkItemIds.indexOf(checkParamVal) >= 0) {
-                        items[i].querySelector('input').checked = true;
+                        console.log(checkItemIds);
+                        if(items[i].querySelector('input')) {
+                            items[i].querySelector('input').checked = true;
+                        }else {
+                            console.log(items[i]);
+                            let buffClass = items[i].getAttribute('class');
+                            if(buffClass.indexOf("active") === -1) {
+                                items[i].removeAttribute("class");
+                                items[i].setAttribute('class', buffClass + ' active');
+                            }
+                        }
                     }
                 }
             }
@@ -264,7 +358,7 @@
 
     // style for items when we hover on them
     let styleStr = document.createElement("style");
-    styleStr.innerHTML = "li.checkbox-filter__item {cursor: pointer;transition: all .2s ease;}li.checkbox-filter__item:hover {background-color:#f4faf6;}li.checkbox-filter__item:hover a.checkbox-filter__link.checkbox-filter__link_state_disabled label:before {border-color:#221f1f;}";
+    styleStr.innerHTML = "li.checkbox-filter__item, li.tile-filter__item {cursor: pointer;transition: all .2s ease;}li.checkbox-filter__item:hover,li.tile-filter__item:hover > a {background-color:#f4faf6;}li.checkbox-filter__item:hover a.checkbox-filter__link.checkbox-filter__link_state_disabled label:before, li.tile-filter__item:hover > a {border-color:#221f1f;} .tile-filter__link.tile-filter__link_state_disabled.active {background-color:#00a046;border-color:#00a046;color:#fff;}";
     document.getElementsByTagName("body")[0].appendChild(styleStr);
 
     if(document.querySelector('app-root')) {
