@@ -349,7 +349,7 @@ console.log(category +" - "+ item);
                             console.log(items[i]);
                             //let buffClass = items[i].getAttribute('class');
                             //if(buffClass.indexOf("active") === -1) {
-                            if(items[i].classList.contains("active")) {
+                            if(!items[i].classList.contains("active")) {
                                 //items[i].removeAttribute("class");
                                 items[i].removeAttribute("style");
                                 //items[i].setAttribute('class', buffClass + ' active');
