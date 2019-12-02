@@ -73,7 +73,7 @@
         
         let sidebar = document.querySelector('aside.sidebar');
         if(sidebar) {
-            let items = sidebar.querySelectorAll('.filter_layout_sidebar > ul > li > a');
+            let items = sidebar.querySelectorAll('.filter_layout_sidebar > ul li > a');
             
             // show first sidebar block because he has hidden sometimes
             sidebar.querySelector('div').removeAttribute('style');
@@ -141,7 +141,7 @@
 
                 if(items[i].getAttribute('class').indexOf('disabled') >= 0) {
                     if(items[i].querySelector('input')) {
-                        if(!items[i].querySelector('input').checked && !/\([0-9]+\)/.test(items[i].querySelector('label').textContent)) {
+                        if(!items[i].querySelector('input').checked && (!/\([0-9]+\)/.test(items[i].querySelector('label').textContent) || !items[i].getAttribute("href"))) {
                             items[i].parentElement.style.display = "none";
                         }
                     }else {
@@ -173,7 +173,7 @@
                 // -------------------------------
                 
                 //label = sidebar.querySelectorAll('li.checkbox-filter__item > a.checkbox-filter__link.checkbox-filter__link_state_disabled')[i];
-                label = sidebar.querySelectorAll('.filter_layout_sidebar > ul > li > a')[i];
+                label = items[i];
 
                 if(label.getAttribute('click')) continue;
 
@@ -196,9 +196,12 @@
                     //    if(itemFromUrl.indexOf(checkItemParamStr) !== -1)
                     //    chd = true;
                     //}
-                    let itemFromUrl = getItems(window.location.href);
-                    if(itemFromUrl)
-                        chd = (itemFromUrl.indexOf(checkItemParamStr) !== -1);
+
+                    let urlItems = getItems(url);
+                    //let itemFromUrl = getItems(window.location.href);
+                    //console.log(itemFromUrl);
+                    //if(urlItems)
+                        chd = urlItems.includes(checkItemParamStr);
 
                     if(chd && indParam === -1) {
                         //if(indParam === -1) {
@@ -206,10 +209,10 @@
                         //}
                     }
 
-                    let urlItems = getItems(url);
+                    //let urlItems = getItems(url);
                     if(urlItems) {
                         for(let j = 0; j < checkItemIds.length; j++) {
-                            if(urlItems.indexOf(checkItemIds[j]) === -1) {
+                            if(!urlItems.includes(checkItemIds[j])) {
                                 checkItemIds.splice(j, 1);
                                 j--;
                             }
@@ -255,7 +258,8 @@ console.log(category +" - "+ item);
                             if(input) {
                                 addToArr = input.checked;
                             }else {
-                                addToArr = (items[i].getAttribute("class").indexOf("active") !== -1) ? true : false;
+                                //addToArr = (items[i].getAttribute("class").indexOf("active") !== -1) ? true : false;
+                                addToArr = items[i].classList.contains("active");
                             }
                             console.log(this.getAttribute("class"));
                             console.log(addToArr);
@@ -276,6 +280,7 @@ console.log(category +" - "+ item);
                                 // remove category from url if category is empty
                                 urlStrArr.splice(j,1);
                             }
+                            console.log(checkItemIds);
                             break;
                         }
                     }
@@ -292,32 +297,36 @@ console.log(category +" - "+ item);
                         input.checked = (!input.checked) ? true : false;
                     }else {
                         console.log("a:"+items[i]);
-                        let activeClass = items[i].getAttribute("class");
-                        if(activeClass.indexOf("active") !== -1) {
-                            items[i].setAttribute("class", activeClass.replace(" active", ""));
+                        //let activeClass = items[i].getAttribute("class");
+                        //if(activeClass.indexOf("active") !== -1) {
+                        if(items[i].classList.contains("active")) {
+                            //items[i].setAttribute("class", activeClass.replace(" active", ""));
+                            items[i].classList.toggle("active");
                             items[i].style.color = "#333";
                         }else {
                             //items[i].removeAttribute("class");
-                            items[i].setAttribute("class", activeClass + " active");
+                            //items[i].setAttribute("class", activeClass + " active");
+                            items[i].classList.toggle("active");
                             items[i].removeAttribute("style");
                         }
                     }
 
                     // ------------------
+                    injectedButton.style.visibility = 'visible';
+                    let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
+                    let l = sidebar.offsetWidth + sidebar.getBoundingClientRect().left - 10;
+
+                    // for items which have input tag
                     if(items[i].querySelector('input')) {
                         //let injectedButton = document.querySelector("#injectedButton");
-                        injectedButton.style.visibility = 'visible';
-
-                        let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
-                        let l = 0;
-                        if(this.querySelector("span")) {
-                            l = this.querySelector("span").offsetWidth + this.querySelector("span").getBoundingClientRect().left + 10;
-                        }else {
-                            l = this.offsetWidth + this.getBoundingClientRect().left - 10;
-                        }
-                        injectedButton.style.top = t + "px";
-                        injectedButton.style.left = l + "px";
+                        //injectedButton.style.visibility = 'visible';
+                        l = this.offsetWidth + this.getBoundingClientRect().left - 10;
+                        //if(this.querySelector("span")) {
+                        //    l = this.querySelector("span").offsetWidth + this.querySelector("span").getBoundingClientRect().left + 10;
+                        //}   
                     }
+                    injectedButton.style.top = t + "px";
+                    injectedButton.style.left = l + "px";
                     // ------------------
 
                     e.stopPropagation();
@@ -338,10 +347,13 @@ console.log(category +" - "+ item);
                             items[i].querySelector('input').checked = true;
                         }else {
                             console.log(items[i]);
-                            let buffClass = items[i].getAttribute('class');
-                            if(buffClass.indexOf("active") === -1) {
-                                items[i].removeAttribute("class");
-                                items[i].setAttribute('class', buffClass + ' active');
+                            //let buffClass = items[i].getAttribute('class');
+                            //if(buffClass.indexOf("active") === -1) {
+                            if(items[i].classList.contains("active")) {
+                                //items[i].removeAttribute("class");
+                                items[i].removeAttribute("style");
+                                //items[i].setAttribute('class', buffClass + ' active');
+                                items[i].classList.add("active");
                             }
                         }
                     }
@@ -358,7 +370,26 @@ console.log(category +" - "+ item);
 
     // style for items when we hover on them
     let styleStr = document.createElement("style");
-    styleStr.innerHTML = "li.checkbox-filter__item, li.tile-filter__item {cursor: pointer;transition: all .2s ease;}li.checkbox-filter__item:hover,li.tile-filter__item:hover > a {background-color:#f4faf6;}li.checkbox-filter__item:hover a.checkbox-filter__link.checkbox-filter__link_state_disabled label:before, li.tile-filter__item:hover > a {border-color:#221f1f;} .tile-filter__link.tile-filter__link_state_disabled.active {background-color:#00a046;border-color:#00a046;color:#fff;}";
+    styleStr.innerHTML = `
+        li.checkbox-filter__item,
+        li.tile-filter__item {
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+        li.checkbox-filter__item:hover > a,
+        li.tile-filter__item:hover > a {
+            background-color:#f4faf6;
+        }
+        li.checkbox-filter__item:hover > a.checkbox-filter__link.checkbox-filter__link_state_disabled label:before,
+        li.tile-filter__item:hover > a {
+            border-color:#221f1f;
+        }
+        .tile-filter__link.tile-filter__link_state_disabled.active {
+            background-color:#00a046;
+            border-color:#00a046;
+            color:#fff;
+        }
+        `;
     document.getElementsByTagName("body")[0].appendChild(styleStr);
 
     if(document.querySelector('app-root')) {
@@ -385,10 +416,10 @@ console.log(category +" - "+ item);
     }
 
     function getItems(str) {
-        if(str.toString().match(/=([a-z0-9,_\-]+)/gi) === null) return null;
+        if(str.toString().match(/=([a-z0-9,_\-]+)/gi) === null) return [];
         return str.toString().match(/=([a-z0-9,_\-]+)/gi).map(function(item) {
-            return item.replace("=", "");
-        }).join(",");
+            return item.replace("=", "").split(',');
+        }).flat(1);
     }
 
     function getBlockCategory(elem) {
