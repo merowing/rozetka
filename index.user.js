@@ -99,9 +99,6 @@
                         if(items[i].innerText === valueName && getCategoryStr === categTitle) {
                             items[i].setAttribute("param", categ+"="+valueId);
                         }
-                        //let createLabel = document.createElement("label");
-                        //createLabel.setAttribute("param", categ+"="+valueId);
-                        //items[i].appendChild(createLabel);
                     }
                 }
             }
@@ -132,12 +129,6 @@
 
             for(let i = 0; i < len; i++) {
 
-                //if(!items[i].querySelector('input')) {
-                //    continue;
-                //}
-                //tile-filter__link tile-filter__link_state_active - checked
-                //tile-filter__link tile-filter__link_state_disabled - disabled
-
                 // hide empty items --------------
 
                 if(items[i].getAttribute('class').indexOf('disabled') >= 0) {
@@ -153,27 +144,19 @@
                     items[i].removeAttribute('class');
                     items[i].style.color = "#333";
                     if(items[i].querySelector('input')) {
-                        //items[i].removeAttribute('class');
                         items[i].setAttribute('class', "checkbox-filter__link checkbox-filter__link_state_disabled");
-                        //items[i].style.color = "#333";
+                        
                         if(items[i].querySelector('label > span')) {
                             items[i].querySelector('label > span').style.visibility = "visible";
                         }
                     }else {
-                        //items[i].removeAttribute('class');
                         items[i].setAttribute('class', "tile-filter__link tile-filter__link_state_disabled");
                         items[i].setAttribute("visible", true);
-                        //items[i].style.color = "#333";
                     }
                 }
 
-                //if(/\([0-9]+\)/.test(items[i].querySelector('label').textContent) || items[i].querySelector('input').checked) {
-                //    items[i].parentElement.removeAttribute("style");
-                //}
-
                 // -------------------------------
                 
-                //label = sidebar.querySelectorAll('li.checkbox-filter__item > a.checkbox-filter__link.checkbox-filter__link_state_disabled')[i];
                 label = items[i];
 
                 if(label.getAttribute('click')) continue;
@@ -189,28 +172,13 @@
                     let indParam = checkItemIds.indexOf(checkItemParamStr);
 
                     let chd = false;
-                    //if(items[i].querySelector('input')) {
-                    //    chd = items[i].querySelector('input').checked;
-                    //}else {
-                        //if(items[i].getAttribute("class").indexOf("active") !== -1)
-                    //    let itemFromUrl = getItems(window.location.href);
-                    //    if(itemFromUrl.indexOf(checkItemParamStr) !== -1)
-                    //    chd = true;
-                    //}
-
                     let urlItems = getItems(url);
-                    //let itemFromUrl = getItems(window.location.href);
-                    //console.log(itemFromUrl);
-                    //if(urlItems)
-                        chd = urlItems.includes(checkItemParamStr);
+                    chd = urlItems.includes(checkItemParamStr);
 
                     if(chd && indParam === -1) {
-                        //if(indParam === -1) {
-                            checkItemIds.push(checkItemParamStr);
-                        //}
+                        checkItemIds.push(checkItemParamStr);
                     }
 
-                    //let urlItems = getItems(url);
                     if(urlItems) {
                         for(let j = 0; j < checkItemIds.length; j++) {
                             if(!urlItems.includes(checkItemIds[j])) {
@@ -259,7 +227,6 @@ console.log(category +" - "+ item);
                             if(input) {
                                 addToArr = input.checked;
                             }else {
-                                //addToArr = (items[i].getAttribute("class").indexOf("active") !== -1) ? true : false;
                                 addToArr = items[i].classList.contains("active");
                             }
                             console.log(this.getAttribute("class"));
@@ -298,15 +265,10 @@ console.log(category +" - "+ item);
                         input.checked = (!input.checked) ? true : false;
                     }else {
                         console.log("a:"+items[i]);
-                        //let activeClass = items[i].getAttribute("class");
-                        //if(activeClass.indexOf("active") !== -1) {
                         if(items[i].classList.contains("active")) {
-                            //items[i].setAttribute("class", activeClass.replace(" active", ""));
                             items[i].classList.toggle("active");
                             items[i].style.color = "#333";
                         }else {
-                            //items[i].removeAttribute("class");
-                            //items[i].setAttribute("class", activeClass + " active");
                             items[i].classList.toggle("active");
                             items[i].removeAttribute("style");
                         }
@@ -319,12 +281,7 @@ console.log(category +" - "+ item);
 
                     // for items which have input tag
                     if(items[i].querySelector('input')) {
-                        //let injectedButton = document.querySelector("#injectedButton");
-                        //injectedButton.style.visibility = 'visible';
                         l = this.offsetWidth + this.getBoundingClientRect().left - 10;
-                        //if(this.querySelector("span")) {
-                        //    l = this.querySelector("span").offsetWidth + this.querySelector("span").getBoundingClientRect().left + 10;
-                        //}   
                     }
                     injectedButton.style.top = t + "px";
                     injectedButton.style.left = l + "px";
@@ -335,7 +292,6 @@ console.log(category +" - "+ item);
             }
 
             for(let i = 0; i < items.length; i++) {
-                //if(!items[i].querySelector('input')) continue;
                 if(items[i].querySelector('input')) {
                     items[i].querySelector('input').checked = false;
                 }
@@ -348,12 +304,8 @@ console.log(category +" - "+ item);
                             items[i].querySelector('input').checked = true;
                         }else {
                             console.log(items[i]);
-                            //let buffClass = items[i].getAttribute('class');
-                            //if(buffClass.indexOf("active") === -1) {
                             if(!items[i].classList.contains("active")) {
-                                //items[i].removeAttribute("class");
                                 items[i].removeAttribute("style");
-                                //items[i].setAttribute('class', buffClass + ' active');
                                 items[i].classList.add("active");
                             }
                         }

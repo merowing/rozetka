@@ -1,7 +1,7 @@
 {
   "name": "Rozetka",
-  "version": "1.0.5.0",
-  "version_name": "1.0.5.0",
+  "version": "1.0.5.1",
+  "version_name": "1.0.5.1",
   "author": "Yurii Kostiuchenko",
   "description": "This extension allows you to select several items in the filter list on a Rozetka website without page refresh",
   "homepage_url": "https://github.com/merowing/rozetka",
