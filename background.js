@@ -1,6 +1,7 @@
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse){
   if(msg.type === "loaddata") {
-    loadData2(sendResponse, msg.id);
+    //loadData2(sendResponse, msg.id);
+    loadData2(sendResponse, msg.urlStrObj);
     return true;
   }
   if(msg.type === "goods") {
@@ -9,8 +10,12 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse){
   }
 });
 
-function loadData2(resp, categoryId) {
-  var url = 'https://xl-catalog-api.rozetka.com.ua/v2/goods/getFilters?front-type=xl&category_id='+categoryId;  
+function loadData2(resp, urlStrObj) {
+  console.log(urlStrObj);
+  let urlStr = `category_id=${urlStrObj.id}&${urlStrObj.params}`;
+  console.log(urlStr);
+  //var url = 'https://xl-catalog-api.rozetka.com.ua/v2/goods/getFilters?front-type=xl&category_id='+categoryId;  
+  var url = 'https://xl-catalog-api.rozetka.com.ua/v2/goods/getFilters?front-type=xl&' + urlStr;
   var xhr;
   xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);

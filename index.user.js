@@ -131,7 +131,7 @@
 
                 // hide empty items --------------
 
-                if(items[i].getAttribute('class').indexOf('disabled') >= 0) {
+                if(items[i].getAttribute('class').indexOf('disabled') >= 0 && !items[i].getAttribute("click")) {
                     if(items[i].querySelector('input')) {
                         if(!items[i].querySelector('input').checked && (!/\([0-9]+\)/.test(items[i].querySelector('label').textContent) || !items[i].getAttribute("href"))) {
                             items[i].parentElement.style.display = "none";
@@ -190,6 +190,7 @@
                 }
 
                 // set label event click on label tags
+                if(!label.parentNode.getAttribute("style"))
                 label.setAttribute("click",true);
             
                 label.parentElement.addEventListener('click', function(e) {
@@ -371,20 +372,31 @@ console.log(category +" - "+ item);
             
             // when we move to another page, parse json items parameters again
             let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
-            if(urlCategoryId !== currentCategoryId) {
-                checkItemIds = [];
-                url = window.location.href;
-                injectedButton.style.visibility = 'hidden';
-            
-                urlCategoryId = currentCategoryId;
-            
-                chrome.runtime.sendMessage({type:'loaddata', id:currentCategoryId},function(response) {
+            //let paramStr = `category_id=${currentCategoryId}`;
+            // if(urlCategoryId !== currentCategoryId && ) {
+            //     checkItemIds = [];
+            //     url = window.location.href;
+            //     injectedButton.style.visibility = 'hidden';
+        
+            //     urlCategoryId = currentCategoryId;
+        
+            //     chrome.runtime.sendMessage({type:'loaddata', urlStr:paramStr},function(response) {
+            //         pageLoad(response);
+            //         generation();
+            //     });
+            // }else {
+
+                let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
+                let paramStrObj = {
+                    'id': currentCategoryId,
+                    'params': currentParams
+                };
+
+                chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
                     pageLoad(response);
                     generation();
                 });
-            }else {
-                generation();
-            }
+            //}
         }).observe(document.querySelector('app-root'), {childList: true, subtree: true});
     }
 
