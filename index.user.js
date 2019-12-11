@@ -195,9 +195,7 @@
             
                 label.parentElement.addEventListener('click', function(e) {
                     e.preventDefault();
-console.log(label);
-console.log(this);
-console.log(items[i]);
+
                     input = items[i].querySelector('input');
                     indexItem = i;
 
@@ -216,7 +214,7 @@ console.log(items[i]);
                     }
                     let category = params[0];
                     let item = params[1];
-console.log(category +" - "+ item);
+
                     for(let j = 0; j < urlStrArr.length; j++) {
                         if(urlStrArr[j].indexOf(category) >= 0) {
                             categoryNotFound = false;
@@ -224,14 +222,13 @@ console.log(category +" - "+ item);
                             let urlCategoryArr2 = urlCategoryArr1[1].split(',');
 
                             let addToArr = false;
-                            console.log(input);
+                            
                             if(input) {
                                 addToArr = input.checked;
                             }else {
                                 addToArr = items[i].classList.contains("active");
                             }
-                            console.log(this.getAttribute("class"));
-                            console.log(addToArr);
+                            
                             if(!addToArr) {
                                 urlCategoryArr2.push(item);
                                 checkItemIds.push(item);
@@ -249,7 +246,7 @@ console.log(category +" - "+ item);
                                 // remove category from url if category is empty
                                 urlStrArr.splice(j,1);
                             }
-                            console.log(checkItemIds);
+                            
                             break;
                         }
                     }
@@ -260,8 +257,6 @@ console.log(category +" - "+ item);
 
                     let slash = (urlStrArr.length > 0) ? urlStrArr.join(';') + '/' : '';
                     url = urlArr.join('/') + slash;
-                console.log(url);
-                console.log(urlStrArr);
 
                     // --------------
                     
@@ -270,8 +265,6 @@ console.log(category +" - "+ item);
                         strParams: urlStrArr.join("&")
                     };
                     chrome.runtime.sendMessage({type:'goods', obj:urlParams},function(response) {
-                        //console.log(response);
-                        
                         let goodStr = "товарів";
                         if(response <= 4) goodStr = "товари";
                         if(response === 1) goodStr = "товар";
@@ -285,7 +278,6 @@ console.log(category +" - "+ item);
                     if(items[i].querySelector('input')) {
                         input.checked = (!input.checked) ? true : false;
                     }else {
-                        console.log("a:"+items[i]);
                         if(items[i].classList.contains("active")) {
                             items[i].classList.toggle("active");
                             items[i].style.color = "#333";
@@ -296,7 +288,6 @@ console.log(category +" - "+ item);
                     }
 
                     // ------------------
-                    //injectedButton.style.visibility = 'visible';
                     let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
                     let l = sidebar.offsetWidth + sidebar.getBoundingClientRect().left - 10;
 
@@ -320,11 +311,9 @@ console.log(category +" - "+ item);
                 if(checkParam) {
                     let checkParamVal = checkParam.split('=')[1];
                     if(checkItemIds.indexOf(checkParamVal) >= 0) {
-                        console.log(checkItemIds);
                         if(items[i].querySelector('input')) {
                             items[i].querySelector('input').checked = true;
                         }else {
-                            console.log(items[i]);
                             if(!items[i].classList.contains("active")) {
                                 items[i].removeAttribute("style");
                                 items[i].classList.add("active");
@@ -372,31 +361,16 @@ console.log(category +" - "+ item);
             
             // when we move to another page, parse json items parameters again
             let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
-            //let paramStr = `category_id=${currentCategoryId}`;
-            // if(urlCategoryId !== currentCategoryId && ) {
-            //     checkItemIds = [];
-            //     url = window.location.href;
-            //     injectedButton.style.visibility = 'hidden';
-        
-            //     urlCategoryId = currentCategoryId;
-        
-            //     chrome.runtime.sendMessage({type:'loaddata', urlStr:paramStr},function(response) {
-            //         pageLoad(response);
-            //         generation();
-            //     });
-            // }else {
+            let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
+            let paramStrObj = {
+                'id': currentCategoryId,
+                'params': currentParams
+            };
 
-                let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
-                let paramStrObj = {
-                    'id': currentCategoryId,
-                    'params': currentParams
-                };
-
-                chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
-                    pageLoad(response);
-                    generation();
-                });
-            //}
+            chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
+                pageLoad(response);
+                generation();
+            });
         }).observe(document.querySelector('app-root'), {childList: true, subtree: true});
     }
 

@@ -1,6 +1,5 @@
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse){
   if(msg.type === "loaddata") {
-    //loadData2(sendResponse, msg.id);
     loadData2(sendResponse, msg.urlStrObj);
     return true;
   }
@@ -11,10 +10,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse){
 });
 
 function loadData2(resp, urlStrObj) {
-  console.log(urlStrObj);
   let urlStr = `category_id=${urlStrObj.id}&${urlStrObj.params}`;
-  console.log(urlStr);
-  //var url = 'https://xl-catalog-api.rozetka.com.ua/v2/goods/getFilters?front-type=xl&category_id='+categoryId;  
   var url = 'https://xl-catalog-api.rozetka.com.ua/v2/goods/getFilters?front-type=xl&' + urlStr;
   var xhr;
   xhr = new XMLHttpRequest();
@@ -28,7 +24,6 @@ function loadData2(resp, urlStrObj) {
 }
 
 function loadGoods(resp, { category, strParams}) {
-  console.log(category, strParams);
   let url = `https://xl-catalog-api.rozetka.com.ua/v2/goods/get?front-type=xl&category_id=${category}&${strParams}`;  
   fetch(url)
     .then(response => response.json())
