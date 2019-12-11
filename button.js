@@ -11,7 +11,7 @@
         padding: 0 16px;
         position: absolute;
         top: 0;
-        z-index: 100;
+        z-index: 99;
         `;
 
     let button = document.createElement("div");
