@@ -376,10 +376,12 @@
                 'params': currentParams
             };
 
+            if(typeof chrome.app.isInstalled !== 'undefined')
             chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
                 pageLoad(response);
                 generation();
             });
+
         }).observe(document.querySelector('app-root'), {childList: true, subtree: true});
     }
 
