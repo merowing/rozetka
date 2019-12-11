@@ -5,7 +5,7 @@
 
 >Для нового дизайну:
 
-* Остання версія 1.0.5.1: [download](https://github.com/merowing/rozetka/releases/download/1.0.5.1/Rozetka2-v1.0.5.1.zip)
+* Остання версія 1.0.5.2: [download](https://github.com/merowing/rozetka/releases/download/1.0.5.2/Rozetka2-v1.0.5.2.zip)
 * нова гілка: [new_design](https://github.com/merowing/rozetka/tree/new_design)
 
 <br />
@@ -48,7 +48,7 @@ This extension allows you to select several items in the filter list on a Rozetk
 
 >For new design:
 
-* Last version 1.0.5.1: [download](https://github.com/merowing/rozetka/releases/download/1.0.5.1/Rozetka2-v1.0.5.1.zip)
+* Last version 1.0.5.2: [download](https://github.com/merowing/rozetka/releases/download/1.0.5.2/Rozetka2-v1.0.5.2.zip)
 * new branch: [new_design](https://github.com/merowing/rozetka/tree/new_design)
 
 <br />
