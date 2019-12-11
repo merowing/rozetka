@@ -3,6 +3,10 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse){
     loadData2(sendResponse, msg.id);
     return true;
   }
+  if(msg.type === "goods") {
+    loadGoods(sendResponse, msg.obj);
+    return true;
+  }
 });
 
 function loadData2(resp, categoryId) {
@@ -16,4 +20,12 @@ function loadData2(resp, categoryId) {
     }
   };
   xhr.send();
+}
+
+function loadGoods(resp, { category, strParams}) {
+  console.log(category, strParams);
+  let url = `https://xl-catalog-api.rozetka.com.ua/v2/goods/get?front-type=xl&category_id=${category}&${strParams}`;  
+  fetch(url)
+    .then(response => response.json())
+    .then(result => resp(result.data.ids_count));
 }

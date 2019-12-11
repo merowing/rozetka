@@ -260,6 +260,26 @@ console.log(category +" - "+ item);
                     let slash = (urlStrArr.length > 0) ? urlStrArr.join(';') + '/' : '';
                     url = urlArr.join('/') + slash;
                 console.log(url);
+                console.log(urlStrArr);
+
+                    // --------------
+                    
+                    let urlParams = {
+                        category: /\/c([0-9]+)\//.exec(window.location.href)[1],
+                        strParams: urlStrArr.join("&")
+                    };
+                    chrome.runtime.sendMessage({type:'goods', obj:urlParams},function(response) {
+                        //console.log(response);
+                        
+                        let goodStr = "товарів";
+                        if(response <= 4) goodStr = "товари";
+                        if(response === 1) goodStr = "товар";
+                        injectedButton.querySelector("span").innerText = (parseInt(response) <= 0) ? "Не знайдено" : response + " " + goodStr;
+                        injectedButton.style.visibility = 'visible';
+                    });
+
+                    // --------------
+
                     // check items on which we clicked
                     if(items[i].querySelector('input')) {
                         input.checked = (!input.checked) ? true : false;
@@ -275,7 +295,7 @@ console.log(category +" - "+ item);
                     }
 
                     // ------------------
-                    injectedButton.style.visibility = 'visible';
+                    //injectedButton.style.visibility = 'visible';
                     let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
                     let l = sidebar.offsetWidth + sidebar.getBoundingClientRect().left - 10;
 
