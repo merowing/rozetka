@@ -362,8 +362,8 @@
             
             // when we move to another page, parse json items parameters again
             let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
-            
-            if(urlCategoryId !== currentCategoryId) {
+            let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
+            if(urlCategoryId !== currentCategoryId && !currentParams) {
                 checkItemIds = [];
                 url = window.location.href;
                 injectedButton.style.visibility = 'hidden';
@@ -371,7 +371,6 @@
                 urlCategoryId = currentCategoryId;
             }
             
-            let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
             let paramStrObj = {
                 'id': currentCategoryId,
                 'params': currentParams
