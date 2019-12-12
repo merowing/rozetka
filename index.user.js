@@ -265,9 +265,14 @@
                         strParams: urlStrArr.join("&")
                     };
                     chrome.runtime.sendMessage({type:'goods', obj:urlParams},function(response) {
+
                         let goodStr = "товарів";
-                        if(response <= 4) goodStr = "товари";
-                        if(response === 1) goodStr = "товар";
+                        let goodsCount = (response).toString().slice(-2);
+                        let goodsCountLen = goodsCount.length - 1;
+                        if(goodsCount[goodsCountLen] <= "4") goodStr = "товари";
+                        if(goodsCount[goodsCountLen] === "1") goodStr = "товар";
+                        if(parseInt(goodsCount) > 10 && parseInt(goodsCount) <= 20 || goodsCount[goodsCountLen] === "0") goodStr = "товарів";
+
                         injectedButton.querySelector("span").innerText = (parseInt(response) <= 0) ? "Не знайдено" : response + " " + goodStr;
                         injectedButton.style.visibility = 'visible';
                     });
