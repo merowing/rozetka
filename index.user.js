@@ -1,5 +1,24 @@
 (function(){
 
+    // let w = document.querySelector(".sidebar").offsetWidth;
+    // let h = document.querySelector(".sidebar").clientHeight;
+    // let t = document.querySelector(".sidebar").offsetTop;
+    // let l = document.querySelector(".sidebar").offsetLeft;
+
+    // console.log(document.querySelector(".sidebar").querySelectorAll("li").length);
+    // let elementBack = document.createElement("div");
+    // elementBack.id = "back";
+    // elementBack.setAttribute("style","width:"+w+"px;height:"+h+"px;top:"+t+"px;left:"+l+"px;background-color:red;position:absolute;z-index:100;");
+    //document.body.appendChild(elementBack);
+
+    // added event "click" on the "aside" block for prevent random click on sort item
+    document.querySelector("aside.sidebar").addEventListener("click",handler,true);
+    function handler(e){
+        console.log(1);
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
     let url = window.location.href;
     let checkItemIds = [];
     let urlCategoryId = 0;
@@ -76,7 +95,12 @@
             let items = sidebar.querySelectorAll('.filter_layout_sidebar > ul li > a');
             
             // show first sidebar block because he has hidden sometimes
-            sidebar.querySelector('div').removeAttribute('style');
+            //sidebar.querySelector('div').removeAttribute('style');
+            sidebar.querySelectorAll('div.sidebar-block').forEach((item, index) => {
+                if(item.querySelector('span').innerText === "0") {
+                    item.style.display = "none";
+                }
+            });
 
             // ----------
 
@@ -363,6 +387,26 @@
 
     if(document.querySelector('app-root')) {
         new MutationObserver(function(mutations, observer) {
+            //console.log(mutations);
+            //console.log(document.querySelector('.sidebar .filter_layout_sidebar > ul li > a').getAttribute("click"));
+            //console.log(observer);
+            //document.querySelector("#back").style.display = "block";
+            //document.querySelector("#back").style.height = document.querySelector(".sidebar").offsetHeight + "px";
+            //if(mutations.length < 4) {
+            //    document.querySelector("#back").style.display = "none";
+            //}
+            // for(let ind in mutations) {
+            //     if(mutations[ind].target.getAttribute("class"))
+            //     if(mutations[ind].target.getAttribute("class").indexOf("central") !== -1) {
+            //         if(!mutations[ind].addedNodes[0].getAttribute("class"))
+            //         console.log(mutations[ind]);
+            //     }
+            // }
+            document.querySelector("aside.sidebar").addEventListener("click",handler,true);
+            //if(mutations.length < 200) {
+                //document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
+            //}
+
             if(!/\/c([0-9]+)\//.exec(window.location.href)) return;
             
             // when we move to another page, parse json items parameters again
@@ -381,11 +425,19 @@
                 'params': currentParams
             };
 
-            if(typeof chrome.app.isInstalled !== 'undefined')
-            chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
-                pageLoad(response);
-                generation();
-            });
+            if(!document.querySelector('.sidebar .filter_layout_sidebar > ul li > a').getAttribute("click")) {
+                if(typeof chrome.app.isInstalled !== 'undefined') {
+                chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
+                    pageLoad(response);
+                    generation();
+                });
+                }
+            }else {
+                document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
+            }
+
+            if(document.querySelector('aside.sidebar div').getAttribute('class'))
+                document.querySelector('aside.sidebar div').removeAttribute('style');
 
         }).observe(document.querySelector('app-root'), {childList: true, subtree: true});
     }
