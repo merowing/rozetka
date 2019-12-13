@@ -12,9 +12,10 @@
     //document.body.appendChild(elementBack);
 
     // added event "click" on the "aside" block for prevent random click on sort item
-    document.querySelector("aside.sidebar").addEventListener("click",handler,true);
+    if(document.querySelector("aside.sidebar"))
+        document.querySelector("aside.sidebar").addEventListener("click",handler,true);
     function handler(e){
-        console.log(1);
+        //console.log(1);
         e.stopPropagation();
         e.preventDefault();
     }
@@ -67,6 +68,7 @@
 
     let buttonClicked = false;
     function generation() {
+        //document.querySelector(".checkbox-filter").innerHTML += "<div>test</div>";
 
         if(injectedButtonClick) {
             injectedButtonClick = false;
@@ -213,6 +215,7 @@
                     }
                 }
 
+                console.log(checkItemIds);
                 // set label event click on label tags
                 if(!label.parentNode.getAttribute("style"))
                 label.setAttribute("click",true);
@@ -288,18 +291,20 @@
                         category: /\/c([0-9]+)\//.exec(window.location.href)[1],
                         strParams: urlStrArr.join("&")
                     };
-                    chrome.runtime.sendMessage({type:'goods', obj:urlParams},function(response) {
+                    if(typeof chrome.app.isInstalled!=='undefined') {
+                        chrome.runtime.sendMessage({type:'goods', obj:urlParams},function(response) {
 
-                        let goodStr = "товарів";
-                        let goodsCount = (response).toString().slice(-2);
-                        let goodsCountLen = goodsCount.length - 1;
-                        if(goodsCount[goodsCountLen] <= "4") goodStr = "товари";
-                        if(goodsCount[goodsCountLen] === "1") goodStr = "товар";
-                        if(parseInt(goodsCount) > 10 && parseInt(goodsCount) <= 20 || goodsCount[goodsCountLen] === "0") goodStr = "товарів";
+                            let goodStr = "товарів";
+                            let goodsCount = (response).toString().slice(-2);
+                            let goodsCountLen = goodsCount.length - 1;
+                            if(goodsCount[goodsCountLen] <= "4") goodStr = "товари";
+                            if(goodsCount[goodsCountLen] === "1") goodStr = "товар";
+                            if(parseInt(goodsCount) > 10 && parseInt(goodsCount) <= 20 || goodsCount[goodsCountLen] === "0") goodStr = "товарів";
 
-                        injectedButton.querySelector("span").innerText = (parseInt(response) <= 0) ? "Не знайдено" : response + " " + goodStr;
-                        injectedButton.style.visibility = 'visible';
-                    });
+                            injectedButton.querySelector("span").innerText = (parseInt(response) <= 0) ? "Не знайдено" : response + " " + goodStr;
+                            injectedButton.style.visibility = 'visible';
+                        });
+                    }
 
                     // --------------
 
@@ -402,13 +407,16 @@
             //         console.log(mutations[ind]);
             //     }
             // }
+            if(document.querySelector("aside.sidebar"))
             document.querySelector("aside.sidebar").addEventListener("click",handler,true);
             //if(mutations.length < 200) {
                 //document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
             //}
 
             if(!/\/c([0-9]+)\//.exec(window.location.href)) return;
-            
+
+            if(!document.querySelector('.sidebar .filter_layout_sidebar > ul li > a').getAttribute("click")) {
+//console.log(1);
             // when we move to another page, parse json items parameters again
             let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
             let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
@@ -424,8 +432,7 @@
                 'id': currentCategoryId,
                 'params': currentParams
             };
-
-            if(!document.querySelector('.sidebar .filter_layout_sidebar > ul li > a').getAttribute("click")) {
+console.log(chrome.app.isInstalled);
                 if(typeof chrome.app.isInstalled !== 'undefined') {
                 chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
                     pageLoad(response);
@@ -434,6 +441,8 @@
                 }
             }else {
                 document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
+
+                //document.querySelector(".checkbox-filter").innerHTML += "<div>test</div>";
             }
 
             if(document.querySelector('aside.sidebar div').getAttribute('class'))
