@@ -12,6 +12,7 @@
         position: absolute;
         top: 0;
         z-index: 99;
+        transition: background-color 0.2s ease-in-out;
         `;
 
     let button = document.createElement("div");

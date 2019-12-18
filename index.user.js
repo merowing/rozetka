@@ -83,9 +83,18 @@
             buttonClicked = true;
         });
         
-        if(window.location.href.indexOf('=') === -1 && buttonClicked) {
-            checkItemIds = [];
+        //checkItemIds = [];
+        //if(url.indexOf('=') === -1 && !/\/c([0-9]+)\//.exec(url)) {
+        //    checkItemIds = [];
+        if(!checkItemIds.length) {
             url = window.location.href;
+        }
+        //}
+        console.log(checkItemIds);
+
+        if(url.indexOf('=') === -1 && buttonClicked) {
+            checkItemIds = [];
+            //url = window.location.href;
             buttonClicked = false;
         }
         // ----------------
@@ -205,7 +214,7 @@
                         checkItemIds.push(checkItemParamStr);
                     }
 
-                    if(urlItems) {
+                    if(urlItems.length) {
                         for(let j = 0; j < checkItemIds.length; j++) {
                             if(!urlItems.includes(checkItemIds[j])) {
                                 checkItemIds.splice(j, 1);
@@ -215,7 +224,7 @@
                     }
                 }
 
-                console.log(checkItemIds);
+                //console.log(checkItemIds);
                 // set label event click on label tags
                 if(!label.parentNode.getAttribute("style"))
                 label.setAttribute("click",true);
@@ -231,6 +240,12 @@
                     if(url.indexOf('=') !== -1) {
                         urlStr = urlArr.splice(-2,1).toString();
                         urlStrArr = urlStr.split(';');
+                    }
+                    
+                    if(/page=[0-9]+/.test(url)) {
+                        console.log(urlStrArr);
+                        urlStrArr = urlStrArr.filter(elem => elem.indexOf("page="));
+                        console.log(urlStrArr);
                     }
 
                     let params = null;
@@ -281,10 +296,11 @@
                         urlStrArr.push(category + "=" + item);
                         checkItemIds.push(item);
                     }
-
+console.log(checkItemIds);
                     let slash = (urlStrArr.length > 0) ? urlStrArr.join(';') + '/' : '';
                     url = urlArr.join('/') + slash;
 
+                    console.log(url);
                     // --------------
                     
                     let urlParams = {
@@ -342,6 +358,7 @@
                 if(items[i].querySelector('input')) {
                     items[i].querySelector('input').checked = false;
                 }
+                //console.log(items);
                 let checkParam = (items[i].querySelector('input')) ? items[i].querySelector('label').getAttribute('param') : items[i].getAttribute('param');
                 if(checkParam) {
                     let checkParamVal = checkParam.split('=')[1];
@@ -407,26 +424,35 @@
             //         console.log(mutations[ind]);
             //     }
             // }
-            if(document.querySelector("aside.sidebar"))
-            document.querySelector("aside.sidebar").addEventListener("click",handler,true);
+            if(document.querySelector("aside.sidebar")) {
+                document.querySelector("aside.sidebar").addEventListener("click",handler,true);
+                document.querySelector("aside.sidebar").setAttribute("block", true);
+            }
             //if(mutations.length < 200) {
                 //document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
             //}
 
-            if(!/\/c([0-9]+)\//.exec(window.location.href)) return;
+            
+            if(!/\/c([0-9]+)\//.exec(window.location.href)) {
+                injectedButton.style.visibility = 'hidden';
+                return;
+            }
 
-            if(!document.querySelector('.sidebar .filter_layout_sidebar > ul li > a').getAttribute("click")) {
-//console.log(1);
+            if(document.querySelector('.sidebar .filter_layout_sidebar > ul li > a'))
+            if(!document.querySelector('.sidebar .filter_layout_sidebar > ul li:not([style]) > a').getAttribute("click")) {
+console.log(1);
             // when we move to another page, parse json items parameters again
             let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
             let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
+
             if(urlCategoryId !== currentCategoryId && !currentParams) {
                 checkItemIds = [];
                 url = window.location.href;
-                injectedButton.style.visibility = 'hidden';
+                //injectedButton.style.visibility = 'hidden';
     
                 urlCategoryId = currentCategoryId;
             }
+            injectedButton.style.visibility = 'hidden';
             
             let paramStrObj = {
                 'id': currentCategoryId,
@@ -434,19 +460,28 @@
             };
 console.log(chrome.app.isInstalled);
                 if(typeof chrome.app.isInstalled !== 'undefined') {
+                    console.log('loaddata');
                 chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
                     pageLoad(response);
                     generation();
                 });
                 }
-            }else {
-                document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
+            }//else {
+                //console.log('ublock');
+                if(document.querySelector("aside.sidebar")) {
+                    if(document.querySelector("aside.sidebar").getAttribute("block")) {
+                        console.log('ublock');
+                        document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
+                        document.querySelector("aside.sidebar").removeAttribute("block");
+                    }
+                }
 
                 //document.querySelector(".checkbox-filter").innerHTML += "<div>test</div>";
-            }
+            //}
 
-            if(document.querySelector('aside.sidebar div').getAttribute('class'))
+            if(document.querySelector('aside.sidebar div')) {
                 document.querySelector('aside.sidebar div').removeAttribute('style');
+            }
 
         }).observe(document.querySelector('app-root'), {childList: true, subtree: true});
     }
@@ -465,5 +500,13 @@ console.log(chrome.app.isInstalled);
         }
         return getBlockCategory(elem.parentNode);
     }
+
+    // change background-color value
+    injectedButton.addEventListener("mouseover", function(e) {
+        injectedButton.style.backgroundColor = "#00bc52";
+    });
+    injectedButton.addEventListener("mouseout", function(e) {
+        injectedButton.style.backgroundColor = "#00a046";
+    });
 
 })();
