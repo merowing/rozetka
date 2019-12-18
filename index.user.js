@@ -63,6 +63,17 @@
                 }
             }
             // -------------
+
+            // let sidebarBlock = document.querySelectorAll(".sidebar-block__toggle");
+            // for(let elem in sidebarBlock) {
+            //     if(sidebarBlock[elem].innerText.match(/([a-zа-я\s\-]+)/gi)[0].trim() === categoriesObj.items[0].title) {
+            //             let clone = document.createElement("div");
+            //             clone.innerText = categoriesObj.items[0].title + " - " + categoriesObj.items[0].name;
+            //             sidebarBlock[elem].appendChild(clone);
+            //             sidebarBlock[elem].parentElement.removeAttribute("style");
+            //             break;
+            //     }
+            // }
         }
     }
 
@@ -103,6 +114,9 @@
         
         let sidebar = document.querySelector('aside.sidebar');
         if(sidebar) {
+
+            //
+
             let items = sidebar.querySelectorAll('.filter_layout_sidebar > ul li > a');
             
             // show first sidebar block because he has hidden sometimes
