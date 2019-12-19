@@ -63,17 +63,59 @@
                 }
             }
             // -------------
+            //console.log(categoriesObj);
 
-            // let sidebarBlock = document.querySelectorAll(".sidebar-block__toggle");
-            // for(let elem in sidebarBlock) {
-            //     if(sidebarBlock[elem].innerText.match(/([a-zа-я\s\-]+)/gi)[0].trim() === categoriesObj.items[0].title) {
-            //             let clone = document.createElement("div");
-            //             clone.innerText = categoriesObj.items[0].title + " - " + categoriesObj.items[0].name;
-            //             sidebarBlock[elem].appendChild(clone);
-            //             sidebarBlock[elem].parentElement.removeAttribute("style");
-            //             break;
-            //     }
-            // }
+            // add to list elements which are missing from json database
+            
+            /*let sidebarBlock = document.querySelectorAll(".sidebar-block__toggle");
+            for(let elem in sidebarBlock) {
+                let items1 = sidebarBlock[elem].parentElement.querySelectorAll(".checkbox-filter__item");
+                let lenItems = items1.length;
+
+                let title = sidebarBlock[4].innerText.match(/([a-zа-я\s\-]+)/gi)[0].trim();
+                if(sidebarBlock[elem].innerText.match(/([a-zа-я\s\-]+)/gi)[0].trim() === categoriesObj.items[1].title) {
+                        // let clone = document.createElement("div");
+                        // clone.innerText = categoriesObj.items[0].title + " - " + categoriesObj.items[0].name;
+                        // sidebarBlock[elem].appendChild(clone);
+                        //sidebarBlock[elem].parentElement.removeAttribute("style");
+                        //console.log(categoriesObj.items[1].title + " - " + categoriesObj.items[1].name);
+
+                        let ind = 0;
+                        let present = false;
+                        for(let j = 0; j < categoriesObj.items.length; j++) {
+                            if(title === categoriesObj.items[j].title) {
+                                present = false;
+                                //console.log(categoriesObj.items[j].name);
+                                for(let i = 0; i < lenItems; i++) {
+                                    let labelName = items1[i].querySelector("label").innerText.match(/([а-я\a-z-\/\s0-9]+)/gi)[0].trim();
+                                    
+                                    if(labelName === categoriesObj.items[j].name) {
+                                        //console.log(labelName +" - "+categoriesObj.items[j].name);
+                                        present = true;
+                                        if(ind < lenItems) ind++;
+                                        //console.log(ind);
+                                        break;
+                                    }
+                                }
+
+                                if(!present) {
+                                    let clone = document.createElement("li");
+                                    //clone.innerText = categoriesObj.items[j].title + " - " + categoriesObj.items[j].name;
+                                    clone.setAttribute("_ngcontent-c43","");
+                                    clone.className = "checkbox-filter__item";
+                                    clone.innerHTML = `<a _ngcontent-c43 href="" class="checkbox-filter__link"><input _ngcontent-c43 class="custom-checkbox" type="checkbox" id="${categoriesObj.items[j].name}"><label _ngcontent-c43 for="${categoriesObj.items[j].name}">${categoriesObj.items[j].name}</label></a>`;
+                                    items1[ind-1].insertAdjacentElement("afterend",clone);//.appendChild(clone);
+                                    //console.log(items1[ind-1]);
+                                }
+                            }
+
+                            //console.log("test");
+                            //items[i].removeAttribute("style");
+                        }
+
+                        break;
+                }
+            }*/
         }
     }
 
