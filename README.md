@@ -5,7 +5,7 @@
 
 >Для нового дизайну:
 
-* Остання версія 1.0.5.2: [download](https://github.com/merowing/rozetka/releases/download/1.0.5.2/Rozetka2-v1.0.5.2.zip)
+* Остання версія 1.0.5.3: [download](https://github.com/merowing/rozetka/releases/download/1.0.5.3/Rozetka2-v1.0.5.3.zip)
 * нова гілка: [new_design](https://github.com/merowing/rozetka/tree/new_design)
 
 <br />
