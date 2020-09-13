@@ -1,21 +1,10 @@
 (function(){
-
-    // let w = document.querySelector(".sidebar").offsetWidth;
-    // let h = document.querySelector(".sidebar").clientHeight;
-    // let t = document.querySelector(".sidebar").offsetTop;
-    // let l = document.querySelector(".sidebar").offsetLeft;
-
-    // console.log(document.querySelector(".sidebar").querySelectorAll("li").length);
-    // let elementBack = document.createElement("div");
-    // elementBack.id = "back";
-    // elementBack.setAttribute("style","width:"+w+"px;height:"+h+"px;top:"+t+"px;left:"+l+"px;background-color:red;position:absolute;z-index:100;");
-    //document.body.appendChild(elementBack);
-
     // added event "click" on the "aside" block for prevent random click on sort item
-    if(document.querySelector("aside.sidebar"))
+    if(document.querySelector("aside.sidebar")) {
         document.querySelector("aside.sidebar").addEventListener("click",handler,true);
+    }
+    
     function handler(e){
-        //console.log(1);
         e.stopPropagation();
         e.preventDefault();
     }
@@ -63,65 +52,11 @@
                 }
             }
             // -------------
-            //console.log(categoriesObj);
-
-            // add to list elements which are missing from json database
-            
-            /*let sidebarBlock = document.querySelectorAll(".sidebar-block__toggle");
-            for(let elem in sidebarBlock) {
-                let items1 = sidebarBlock[elem].parentElement.querySelectorAll(".checkbox-filter__item");
-                let lenItems = items1.length;
-
-                let title = sidebarBlock[4].innerText.match(/([a-zа-я\s\-]+)/gi)[0].trim();
-                if(sidebarBlock[elem].innerText.match(/([a-zа-я\s\-]+)/gi)[0].trim() === categoriesObj.items[1].title) {
-                        // let clone = document.createElement("div");
-                        // clone.innerText = categoriesObj.items[0].title + " - " + categoriesObj.items[0].name;
-                        // sidebarBlock[elem].appendChild(clone);
-                        //sidebarBlock[elem].parentElement.removeAttribute("style");
-                        //console.log(categoriesObj.items[1].title + " - " + categoriesObj.items[1].name);
-
-                        let ind = 0;
-                        let present = false;
-                        for(let j = 0; j < categoriesObj.items.length; j++) {
-                            if(title === categoriesObj.items[j].title) {
-                                present = false;
-                                //console.log(categoriesObj.items[j].name);
-                                for(let i = 0; i < lenItems; i++) {
-                                    let labelName = items1[i].querySelector("label").innerText.match(/([а-я\a-z-\/\s0-9]+)/gi)[0].trim();
-                                    
-                                    if(labelName === categoriesObj.items[j].name) {
-                                        //console.log(labelName +" - "+categoriesObj.items[j].name);
-                                        present = true;
-                                        if(ind < lenItems) ind++;
-                                        //console.log(ind);
-                                        break;
-                                    }
-                                }
-
-                                if(!present) {
-                                    let clone = document.createElement("li");
-                                    //clone.innerText = categoriesObj.items[j].title + " - " + categoriesObj.items[j].name;
-                                    clone.setAttribute("_ngcontent-c43","");
-                                    clone.className = "checkbox-filter__item";
-                                    clone.innerHTML = `<a _ngcontent-c43 href="" class="checkbox-filter__link"><input _ngcontent-c43 class="custom-checkbox" type="checkbox" id="${categoriesObj.items[j].name}"><label _ngcontent-c43 for="${categoriesObj.items[j].name}">${categoriesObj.items[j].name}</label></a>`;
-                                    items1[ind-1].insertAdjacentElement("afterend",clone);//.appendChild(clone);
-                                    //console.log(items1[ind-1]);
-                                }
-                            }
-
-                            //console.log("test");
-                            //items[i].removeAttribute("style");
-                        }
-
-                        break;
-                }
-            }*/
         }
     }
 
     let buttonClicked = false;
     function generation() {
-        //document.querySelector(".checkbox-filter").innerHTML += "<div>test</div>";
 
         if(injectedButtonClick) {
             injectedButtonClick = false;
@@ -135,19 +70,13 @@
         button.addEventListener("click",function(e){
             buttonClicked = true;
         });
-        
-        //checkItemIds = [];
-        //if(url.indexOf('=') === -1 && !/\/c([0-9]+)\//.exec(url)) {
-        //    checkItemIds = [];
+
         if(!checkItemIds.length) {
             url = window.location.href;
         }
-        //}
-        console.log(checkItemIds);
 
         if(url.indexOf('=') === -1 && buttonClicked) {
             checkItemIds = [];
-            //url = window.location.href;
             buttonClicked = false;
         }
         // ----------------
@@ -156,10 +85,7 @@
         
         let sidebar = document.querySelector('aside.sidebar');
         if(sidebar) {
-
-            //
-
-            let items = sidebar.querySelectorAll('.filter_layout_sidebar > ul li > a');
+            let items = sidebar.querySelectorAll('.sidebar-block ul li > a'); // .filter_layout_sidebar
             
             // show first sidebar block because he has hidden sometimes
             //sidebar.querySelector('div').removeAttribute('style');
@@ -174,7 +100,15 @@
             // set new attribute param for all items
             for(let i = 0; i < items.length; i++) {
                 let getCategory = getBlockCategory(items[i]);
-                let getCategoryStr = getCategory.firstChild.nodeValue.replace(/^\s+|\s+$/g,'');
+                
+                let nodes = getCategory.firstChild.childNodes;
+
+                // nodeTypes: 3 - text, 8 - comment, 1 - HTMLtag (e.g. SPAN)
+                // we sort out all nodes and look for first text
+                let nodeValue = Array.prototype.filter.call(nodes, node => node.nodeType == 3)[0].nodeValue;
+
+                let getCategoryStr = nodeValue.replace(/^\s+|\s+$/g,'');
+                //console.log(getCategoryStr);
                 let objItems = categoriesObj.items;
                 for(let j = 0; j < objItems.length; j++) {
                     let categTitle = objItems[j].title; // name of block
@@ -280,7 +214,6 @@
                     }
                 }
 
-                //console.log(checkItemIds);
                 // set label event click on label tags
                 if(!label.parentNode.getAttribute("style"))
                 label.setAttribute("click",true);
@@ -299,9 +232,7 @@
                     }
                     
                     if(/page=[0-9]+/.test(url)) {
-                        console.log(urlStrArr);
                         urlStrArr = urlStrArr.filter(elem => elem.indexOf("page="));
-                        console.log(urlStrArr);
                     }
 
                     let params = null;
@@ -352,11 +283,10 @@
                         urlStrArr.push(category + "=" + item);
                         checkItemIds.push(item);
                     }
-console.log(checkItemIds);
+                    
                     let slash = (urlStrArr.length > 0) ? urlStrArr.join(';') + '/' : '';
                     url = urlArr.join('/') + slash;
 
-                    console.log(url);
                     // --------------
                     
                     let urlParams = {
@@ -394,7 +324,6 @@ console.log(checkItemIds);
                     }
 
                     // ------------------
-                    //injectedButton.style.visibility = 'visible';
                     let t = this.getBoundingClientRect().top + this.offsetHeight/2 - injectedButton.offsetHeight/2 + window.scrollY;
                     let l = sidebar.offsetWidth + sidebar.getBoundingClientRect().left - 10;
 
@@ -414,7 +343,6 @@ console.log(checkItemIds);
                 if(items[i].querySelector('input')) {
                     items[i].querySelector('input').checked = false;
                 }
-                //console.log(items);
                 let checkParam = (items[i].querySelector('input')) ? items[i].querySelector('label').getAttribute('param') : items[i].getAttribute('param');
                 if(checkParam) {
                     let checkParamVal = checkParam.split('=')[1];
@@ -465,75 +393,48 @@ console.log(checkItemIds);
 
     if(document.querySelector('app-root')) {
         new MutationObserver(function(mutations, observer) {
-            //console.log(mutations);
-            //console.log(document.querySelector('.sidebar .filter_layout_sidebar > ul li > a').getAttribute("click"));
-            //console.log(observer);
-            //document.querySelector("#back").style.display = "block";
-            //document.querySelector("#back").style.height = document.querySelector(".sidebar").offsetHeight + "px";
-            //if(mutations.length < 4) {
-            //    document.querySelector("#back").style.display = "none";
-            //}
-            // for(let ind in mutations) {
-            //     if(mutations[ind].target.getAttribute("class"))
-            //     if(mutations[ind].target.getAttribute("class").indexOf("central") !== -1) {
-            //         if(!mutations[ind].addedNodes[0].getAttribute("class"))
-            //         console.log(mutations[ind]);
-            //     }
-            // }
             if(document.querySelector("aside.sidebar")) {
                 document.querySelector("aside.sidebar").addEventListener("click",handler,true);
                 document.querySelector("aside.sidebar").setAttribute("block", true);
             }
-            //if(mutations.length < 200) {
-                //document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
-            //}
-
-            
             if(!/\/c([0-9]+)\//.exec(window.location.href)) {
                 injectedButton.style.visibility = 'hidden';
                 return;
             }
 
-            if(document.querySelector('.sidebar .filter_layout_sidebar > ul li > a'))
-            if(!document.querySelector('.sidebar .filter_layout_sidebar > ul li:not([style]) > a').getAttribute("click")) {
-console.log(1);
-            // when we move to another page, parse json items parameters again
-            let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
-            let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
+            if(document.querySelector('.sidebar .sidebar-block ul li > a'))
+            if(!document.querySelector('.sidebar .sidebar-block ul li:not([style]) > a').getAttribute("click")) {
 
-            if(urlCategoryId !== currentCategoryId && !currentParams) {
-                checkItemIds = [];
-                url = window.location.href;
-                //injectedButton.style.visibility = 'hidden';
-    
-                urlCategoryId = currentCategoryId;
-            }
-            injectedButton.style.visibility = 'hidden';
+                // when we move to another page, parse json items parameters again
+                let currentCategoryId = /\/c([0-9]+)\//.exec(window.location.href)[1];
+                let currentParams = window.location.pathname.split("/").slice(3,-1).toString().replace(/;/g, "&");
+
+                if(urlCategoryId !== currentCategoryId && !currentParams) {
+                    checkItemIds = [];
+                    url = window.location.href;    
+                    urlCategoryId = currentCategoryId;
+                }
+                injectedButton.style.visibility = 'hidden';
+                
+                let paramStrObj = {
+                    'id': currentCategoryId,
+                    'params': currentParams
+                };
             
-            let paramStrObj = {
-                'id': currentCategoryId,
-                'params': currentParams
-            };
-console.log(chrome.app.isInstalled);
                 if(typeof chrome.app.isInstalled !== 'undefined') {
-                    console.log('loaddata');
-                chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
-                    pageLoad(response);
-                    generation();
-                });
+                    chrome.runtime.sendMessage({type:'loaddata', urlStrObj:paramStrObj},function(response) {
+                        pageLoad(response);
+                        generation();
+                    });
                 }
-            }//else {
-                //console.log('ublock');
-                if(document.querySelector("aside.sidebar")) {
-                    if(document.querySelector("aside.sidebar").getAttribute("block")) {
-                        console.log('ublock');
-                        document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
-                        document.querySelector("aside.sidebar").removeAttribute("block");
-                    }
-                }
+            }
 
-                //document.querySelector(".checkbox-filter").innerHTML += "<div>test</div>";
-            //}
+            if(document.querySelector("aside.sidebar")) {
+                if(document.querySelector("aside.sidebar").getAttribute("block")) {
+                    document.querySelector("aside.sidebar").removeEventListener("click",handler,true);
+                    document.querySelector("aside.sidebar").removeAttribute("block");
+                }
+            }
 
             if(document.querySelector('aside.sidebar div')) {
                 document.querySelector('aside.sidebar div').removeAttribute('style');
